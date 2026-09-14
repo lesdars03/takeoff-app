@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tender-to-Takeoff Project Monitor</title>
+  <style>
+    :root {
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #16a34a;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg-color); color: var(--text-main); padding: 2rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+
+    header { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1.5rem; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; }
+
+    .progress-container { margin-top: 1rem; }
+    .progress-header { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .progress-track { background: var(--border-color); height: 12px; border-radius: 6px; overflow: hidden; }
+    .progress-fill { background: var(--primary); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+    .controls { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    input, select { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; }
+    input[type="text"] { flex: 2; min-width: 200px; }
+    select { flex: 1; min-width: 180px; }
+    button { background: var(--primary); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 500; }
+    button:hover { background: var(--primary-hover); }
+    button:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+    .status-msg { font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem; display: none; color: var(--success); }
+
+    .phase-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.25rem; margin-bottom: 1.25rem; }
+    .phase-title { font-size: 1.1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; color: var(--primary); }
+
+    .task-list { list-style: none; }
+    .task-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid #f1f5f9; }
+    .task-item.nested { margin-left: 1.75rem; }
+    input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; cursor: pointer; accent-color: var(--primary); }
+    label { cursor: pointer; font-size: 0.95rem; line-height: 1.4; }
+    .task-item.completed label { text-decoration: line-through; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Tender-to-Takeoff Project Monitor</h1>
+    <p class="subtitle">Cloudflare Hosted · Google Sheets Database</p>
+    
+    <div class="progress-container">
+      <div class="progress-header">
+        <span>Project Overall Completion</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="project-name" placeholder="Enter Project Name or Number..." />
+    <button id="save-btn" onclick="saveToCloud()">Save to Google Sheet</button>
+    <select id="project-selector" onchange="loadSelectedProject()">
+      <option value="">-- Load Saved Cloud Project --</option>
+    </select>
+  </div>
+  <div id="status-msg" class="status-msg"></div>
+
+  <main>
+    <!-- Phase 1 -->
+    <div class="phase-card">
+      <h2 class="phase-title">Phase 1 — Tender Intake & Setup (Slides 2–5)</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="t1" onchange="updateProgress()"><label for="t1"><strong>Step 1:</strong> Receive tender via Email or Estimate One.</label></li>
+        <li class="task-item"><input type="checkbox" id="t2" onchange="updateProgress()"><label for="t2"><strong>Step 2:</strong> Check file completeness (Drawings, specs, lighting/FFE schedules, arch/specialist drawings).</label></li>
+        <li class="task-item"><input type="checkbox" id="t3" onchange="updateProgress()"><label for="t3"><strong>Step 3:</strong> Set up folder structure: <em>01 Tender Submission, 02 Subbie Quotes, 03 Documentations, 04 Correspondents, 05 Working Folder</em>.</label></li>
+        <li class="task-item"><input type="checkbox" id="t4" onchange="updateProgress()"><label for="t4"><strong>Step 4:</strong> Save files to <em>03 Documentations</em> and upload key drawings.</label></li>
+      </ul>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase-card">
+      <h2 class="phase-title">Phase 2 — Scoping & Drawing Review (Slides 6–9)</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="t5" onchange="updateProgress()"><label for="t5"><strong>Step 5:</strong> Identify project type (New vs. Existing | Resi / Commercial / Institutional).</label></li>
+        <li class="task-item"><input type="checkbox" id="t6" onchange="updateProgress()"><label for="t6"><strong>Step 6:</strong> Review drawings & specs (Scope notes, legends & schedule at spec tail end).</label></li>
+        <li class="task-item"><input type="checkbox" id="t7" onchange="updateProgress()"><label for="t7"><strong>Step 7:</strong> Run Master Checklist sweep (Lighting DALI/240V/Hive, Power, MSB, DBs, Comms, Security, Fire, Solar, EV, etc.).</label></li>
+        <li class="task-item"><input type="checkbox" id="t8" onchange="updateProgress()"><label for="t8"><strong>Step 8:</strong> Prepare & send RFQs for specialist systems (Switchboards, DALI, Hive, Fire, Security, Solar/EV).</label></li>
+      </ul>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase-card">
+      <h2 class="phase-title">Phase 3 — The Actual Takeoff (Slides 10–15)</h2>
+      <ul class="task-list">
+        <li class="task-item"><input type="checkbox" id="t9" onchange="updateProgress()"><label for="t9"><strong>Step 9:</strong> Ground Plan Setup: Scale sheet & sanity-check door scale (~0.92m).</label></li>
+        
+        <li class="task-item"><input type="checkbox" id="t10_head" onchange="updateProgress()"><label for="t10_head"><strong>Step 10: Strict Takeoff Order:</strong></label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_1" onchange="updateProgress()"><label for="t10_1">1. Lighting & Emergency (Send RFQ immediately — 3–5 day turnaround)</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_2" onchange="updateProgress()"><label for="t10_2">2. Power, Isolators, DBs & EMF Shielding</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_3" onchange="updateProgress()"><label for="t10_3">3. Communications (Cat6/6A)</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_4" onchange="updateProgress()"><label for="t10_4">4. Cable Containment (Conduits & Cable Trays)</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_5" onchange="updateProgress()"><label for="t10_5">5. Mains, Submains (JCal) & Fibre Optic</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_6" onchange="updateProgress()"><label for="t10_6">6. MATV / AV / PA</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_7" onchange="updateProgress()"><label for="t10_7">7. Security (Access Control, CCTV, Intercom)</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_8" onchange="updateProgress()"><label for="t10_8">8. UAT / Nurse Call</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_9" onchange="updateProgress()"><label for="t10_9">9. Fire Alarm (AS1670) & Smoke Alarm (AS3786)</label></li>
+        <li class="task-item nested"><input type="checkbox" id="t10_10" onchange="updateProgress()"><label for="t10_10">10. PV Solar / EV Charger / Heating</label></li>
+
+        <li class="task-item"><input type="checkbox" id="t11" onchange="updateProgress()"><label for="t11"><strong>Step 11:</strong> Post-takeoff QA (Cross-check missed items against legends & FFE schedule).</label></li>
+        <li class="task-item"><input type="checkbox" id="t12" onchange="updateProgress()"><label for="t12"><strong>Step 12:</strong> Validate quantities & <strong>LOCK track lights / LED continuous runs</strong>.</label></li>
+        <li class="task-item"><input type="checkbox" id="t13" onchange="updateProgress()"><label for="t13"><strong>Step 13:</strong> Export takeoff as CSV and convert to Excel (.xlsx).</label></li>
+        <li class="task-item"><input type="checkbox" id="t14" onchange="updateProgress()"><label for="t14"><strong>Step 14:</strong> Prepare final BOQ & Bill of Materials organized by system.</label></li>
+      </ul>
+    </div>
+  </main>
+</div>
+
+<script>
+  const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzl61bAq7IsFCL8vqT4M5sUNoY95SLhsZcJJFEYy6YdsCKOmnXTS62CIptb4S4bihaCpQ/exec";
+  let projectsCache = [];
+
+  function updateProgress() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let checkedCount = 0;
+
+    checkboxes.forEach(box => {
+      if (box.checked) {
+        checkedCount++;
+        box.parentElement.classList.add('completed');
+      } else {
+        box.parentElement.classList.remove('completed');
+      }
+    });
+
+    const percent = Math.round((checkedCount / checkboxes.length) * 100);
+    const fill = document.getElementById('progress-fill');
+    fill.style.width = percent + '%';
+    document.getElementById('progress-percent').textContent = percent + '%';
+    fill.style.background = percent === 100 ? 'var(--success)' : 'var(--primary)';
+  }
+
+  function showStatus(text) {
+    const msg = document.getElementById('status-msg');
+    msg.textContent = text;
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 3500);
+  }
+
+  async function saveToCloud() {
+    const projectName = document.getElementById('project-name').value.trim();
+    if (!projectName) return alert('Please enter a project name.');
+
+    const saveBtn = document.getElementById('save-btn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+
+    const tasks = {};
+    document.querySelectorAll('input[type="checkbox"]').forEach(box => {
+      tasks[box.id] = box.checked;
+    });
+
+    try {
+      await fetch(GOOGLE_API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectName, tasks })
+      });
+
+      showStatus("Saved successfully to Google Sheets!");
+      setTimeout(fetchProjectsFromCloud, 1000);
+    } catch (err) {
+      alert("Failed to save data.");
+      console.error(err);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save to Google Sheet";
+    }
+  }
+
+  async function fetchProjectsFromCloud() {
+    if (!GOOGLE_API_URL || GOOGLE_API_URL.includes("YOUR_GOOGLE")) return;
+
+    try {
+      const res = await fetch(GOOGLE_API_URL);
+      projectsCache = await res.json();
+
+      const selector = document.getElementById('project-selector');
+      selector.innerHTML = '<option value="">-- Load Saved Cloud Project --</option>';
+
+      projectsCache.forEach(p => {
+        const option = document.createElement('option');
+        option.value = p.projectName;
+        option.textContent = p.projectName;
+        selector.appendChild(option);
+      });
+    } catch (err) {
+      console.error("Error fetching projects:", err);
+    }
+  }
+
+  function loadSelectedProject() {
+    const selectedName = document.getElementById('project-selector').value;
+    if (!selectedName) return;
+
+    const project = projectsCache.find(p => p.projectName === selectedName);
+    if (project) {
+      document.getElementById('project-name').value = project.projectName;
+      document.querySelectorAll('input[type="checkbox"]').forEach(box => {
+        box.checked = !!project.tasks[box.id];
+      });
+      updateProgress();
+      showStatus(`Loaded "${project.projectName}"`);
+    }
+  }
+
+  fetchProjectsFromCloud();
+</script>
+
+</body>
+</html>
