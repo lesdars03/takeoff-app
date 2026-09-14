@@ -55,7 +55,6 @@
     .btn:hover { opacity: 0.9; }
     .btn-secondary { background: #fff; color: var(--text-main); border: 1px solid var(--border-color); }
     .btn-blue { background: var(--accent-blue); color: #fff; }
-    .btn-danger { background: #ef4444; color: #fff; }
 
     /* Workflow Stepper */
     .stepper-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
@@ -96,12 +95,15 @@
     .data-table th { background: #f9fafb; font-weight: 600; color: var(--text-muted); }
 
     /* Form Styles & Inputs */
-    .takeoff-form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 0.75rem; align-items: end; margin-top: 1rem; background: #f9fafb; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); }
+    .takeoff-form-grid { display: grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr auto; gap: 0.75rem; align-items: end; margin-top: 1rem; background: #f9fafb; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); }
     .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
     .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
     .form-group input, .form-group select, .form-group textarea {
       width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.875rem; outline: none; background: #fff;
     }
+
+    /* Code Tag Design */
+    .code-badge { background: #1e293b; color: #38bdf8; font-family: monospace; font-weight: 700; font-size: 0.8rem; padding: 0.2rem 0.5rem; border-radius: 4px; }
 
     /* Modal Form Styles */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100; }
@@ -266,17 +268,21 @@
       </div>
     </div>
 
-    <!-- VIEW: TAKEOFF & FIXTURES (NEW FEATURE) -->
+    <!-- VIEW: TAKEOFF & FIXTURES WITH CODE FIELD -->
     <div id="view-takeoff" class="view-pane">
       <div class="card">
         <div class="card-title">
           <span>Takeoff Fixtures & Materials List</span>
-          <span style="font-size:0.85rem; color:var(--text-muted);" id="takeoff-summary-count">0 items added</span>
+          <span style="font-size:0.85rem; color:var(--text-muted);" id="takeoff-summary-count">0 items recorded</span>
         </div>
         <p class="card-desc">List fixtures, fittings, devices, and cable runs required for this project takeoff.</p>
 
         <!-- Form to Add Items -->
         <form id="add-takeoff-form" onsubmit="handleAddTakeoffItem(event)" class="takeoff-form-grid">
+          <div class="form-group">
+            <label>Code / Tag</label>
+            <input type="text" id="tf-code" placeholder="e.g. A1, HB-1" style="font-family: monospace; font-weight:700;" required />
+          </div>
           <div class="form-group">
             <label>Fixture / Material Description</label>
             <input type="text" id="tf-desc" placeholder="e.g. Type A1 LED Downlight (7W IP44)" required />
@@ -312,11 +318,12 @@
         <table class="data-table">
           <thead>
             <tr>
+              <th style="width:100px;">Code</th>
               <th>Description</th>
               <th>Category</th>
               <th>Quantity</th>
               <th>Unit</th>
-              <th>Action</th>
+              <th style="width:80px;">Action</th>
             </tr>
           </thead>
           <tbody id="takeoff-table-body">
@@ -404,7 +411,6 @@
 <script>
   const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzl61bAq7IsFCL8vqT4M5sUNoY95SLhsZcJJFEYy6YdsCKOmnXTS62CIptb4S4bihaCpQ/exec";
 
-  // Individual Per-Project State
   let projects = [
     {
       projectName: "Riverside Apartments",
@@ -414,8 +420,8 @@
       summary: "12-unit residential apartment development.",
       workflowTasks: { wf1: true, wf2: true, wf3: true, wf4: false },
       takeoffItems: [
-        { id: 1, desc: "Type A LED Downlight 10W", cat: "Lighting", qty: 120, unit: "ea" },
-        { id: 2, desc: "Double GPO 10A White", cat: "Power", qty: 85, unit: "ea" }
+        { id: 1, code: "A1", desc: "Type A LED Downlight 10W", cat: "Lighting", qty: 120, unit: "ea" },
+        { id: 2, code: "DGPO", desc: "Double GPO 10A White", cat: "Power", qty: 85, unit: "ea" }
       ]
     },
     {
@@ -426,7 +432,7 @@
       summary: "High bay lighting and 3-phase power distribution installation.",
       workflowTasks: { wf1: true, wf2: false },
       takeoffItems: [
-        { id: 1, desc: "150W LED High Bay Light", cat: "Lighting", qty: 18, unit: "ea" }
+        { id: 1, code: "HB-1", desc: "150W LED High Bay Light", cat: "Lighting", qty: 18, unit: "ea" }
       ]
     }
   ];
@@ -491,6 +497,7 @@
   /* Takeoff Fixture Management */
   function handleAddTakeoffItem(e) {
     e.preventDefault();
+    const code = document.getElementById('tf-code').value.toUpperCase();
     const desc = document.getElementById('tf-desc').value;
     const cat = document.getElementById('tf-cat').value;
     const qty = parseInt(document.getElementById('tf-qty').value);
@@ -501,6 +508,7 @@
 
     currentProj.takeoffItems.push({
       id: Date.now(),
+      code,
       desc,
       cat,
       qty,
@@ -509,7 +517,7 @@
 
     document.getElementById('add-takeoff-form').reset();
     renderTakeoffTable();
-    showToast("Added Takeoff Item");
+    showToast(`Added [${code}] to Takeoff List`);
   }
 
   function deleteTakeoffItem(id) {
@@ -528,12 +536,13 @@
     document.getElementById('takeoff-summary-count').textContent = `${items.length} items recorded`;
 
     if (items.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No takeoff items added yet for this project.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No takeoff items added yet for this project.</td></tr>`;
       return;
     }
 
     tbody.innerHTML = items.map(item => `
       <tr>
+        <td><span class="code-badge">${item.code || '-'}</span></td>
         <td><strong>${item.desc}</strong></td>
         <td><span class="task-tag">${item.cat}</span></td>
         <td><strong>${item.qty}</strong></td>
