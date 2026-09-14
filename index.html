@@ -355,13 +355,68 @@
     </div>
 
     <!-- VIEW: PRICING -->
-    <div id="view-pricing" class="view-pane">
-      <div class="card">
-        <div class="card-title">Pricing Breakdown</div>
-        <p class="card-desc">Pricing rates and labor calculations.</p>
+<div id="view-pricing" class="view-pane">
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-title">Direct Cost (Mat + Lab)</div>
+      <div class="metric-value" id="price-direct-cost">$0.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title">Margin & Overheads</div>
+      <div class="metric-value" id="price-margin-val">$0.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title">Total Tender Price (Ex. GST)</div>
+      <div class="metric-value" style="color:var(--accent-blue);" id="price-total-tender">$0.00</div>
+    </div>
+  </div>
+
+  <!-- Direct Material & Labor Calculations -->
+  <div class="card">
+    <div class="card-title">Takeoff Pricing & Labor Rates</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Unit Mat Cost ($)</th>
+          <th>Total Mat ($)</th>
+          <th>Labor Hours/Unit</th>
+          <th>Total Labor ($)</th>
+        </tr>
+      </thead>
+      <tbody id="pricing-table-body">
+        <!-- JS populates this from current project's takeoff items -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Indirect Costs, Subbies & Margins -->
+  <div class="card">
+    <div class="card-title">Subcontractors, Preliminaries & Profit Margin</div>
+    <div class="takeoff-form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+      <div class="form-group">
+        <label>Base Labor Rate ($/hr)</label>
+        <input type="number" id="rate-labor" value="85" onchange="calculateTenderTotal()" />
+      </div>
+      <div class="form-group">
+        <label>Subcontractor Quotes (MSB/Fire/Security)</label>
+        <input type="number" id="cost-subbies" placeholder="0" onchange="calculateTenderTotal()" />
+      </div>
+      <div class="form-group">
+        <label>Preliminaries & Plant Hire ($)</label>
+        <input type="number" id="cost-prelims" placeholder="0" onchange="calculateTenderTotal()" />
+      </div>
+      <div class="form-group">
+        <label>Overhead (%)</label>
+        <input type="number" id="margin-overhead" value="10" onchange="calculateTenderTotal()" />
+      </div>
+      <div class="form-group">
+        <label>Profit Margin (%)</label>
+        <input type="number" id="margin-profit" value="15" onchange="calculateTenderTotal()" />
       </div>
     </div>
-  </main>
+  </div>
 </div>
 
 <!-- Modal: Add New Project -->
