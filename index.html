@@ -30,7 +30,7 @@
 
     /* Left Sidebar */
     aside {
-      width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color);
+      width: 250px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color);
       display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem 1rem; flex-shrink: 0;
     }
     .brand { display: flex; align-items: center; gap: 0.75rem; font-weight: 700; font-size: 0.95rem; color: var(--accent-blue); padding-bottom: 1.5rem; }
@@ -60,7 +60,7 @@
     .stepper-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
     .step-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; cursor: pointer; flex: 1; }
     .step-item.active { color: var(--accent-blue); font-weight: 700; }
-    .step-circle { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; background: #fff; }
+    .step-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; background: #fff; }
     .step-item.active .step-circle { border-color: var(--accent-blue); background: var(--accent-blue); color: #fff; }
     .step-line { height: 2px; background: var(--border-color); flex: 1; margin: 0 -15px; transform: translateY(-10px); }
 
@@ -74,15 +74,20 @@
     .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
     .card-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
 
-    /* Scope Categories */
-    .scope-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
-    .scope-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6; }
-    .scope-name { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 0.9rem; }
-    
-    .badge { padding: 0.25rem 0.65rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; user-select: none; }
-    .badge-green { background: var(--status-green-bg); color: var(--status-green-text); }
-    .badge-amber { background: var(--status-amber-bg); color: var(--status-amber-text); }
-    .badge-gray { background: var(--status-gray-bg); color: var(--status-gray-text); }
+    /* Checklist Section */
+    .workflow-group { margin-bottom: 1.5rem; }
+    .workflow-group-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.75rem; letter-spacing: 0.05em; display: flex; justify-content: space-between; }
+    .checklist-container { display: flex; flex-direction: column; gap: 0.5rem; }
+    .task-item { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.85rem; background: #f9fafb; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; transition: background 0.2s; }
+    .task-item:hover { background: #f3f4f6; }
+    .task-label { display: flex; align-items: center; gap: 0.75rem; font-weight: 500; cursor: pointer; flex: 1; }
+    .task-item.completed { background: #f0fdf4; border-color: #bbf7d0; opacity: 0.8; }
+    .task-item.completed .task-text { text-decoration: line-through; color: var(--text-muted); }
+    .task-tag { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; background: #e2e8f0; color: #475569; }
+
+    /* Progress bar */
+    .progress-bar-container { background: #e5e7eb; border-radius: 8px; height: 10px; width: 100%; overflow: hidden; margin-top: 0.5rem; }
+    .progress-bar-fill { background: var(--accent-blue); height: 100%; width: 0%; transition: width 0.3s ease; }
 
     /* Data Tables */
     .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
@@ -99,7 +104,6 @@
     .form-group input, .form-group textarea {
       width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;
     }
-    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-blue); }
 
     input[type="checkbox"] { accent-color: var(--accent-blue); width: 18px; height: 18px; cursor: pointer; }
     .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--accent-navy); color: #fff; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 200; }
@@ -117,8 +121,8 @@
       </div>
       <ul class="nav-list">
         <li class="nav-item active" onclick="switchNav(this, 'view-dashboard')"><i class="fa-solid fa-table-cells-large"></i> Dashboard</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-checklist')"><i class="fa-solid fa-list-check"></i> Workflow Checklist</li>
         <li class="nav-item" onclick="switchNav(this, 'view-projects')"><i class="fa-solid fa-folder"></i> Projects</li>
-        <li class="nav-item" onclick="switchNav(this, 'view-scope')"><i class="fa-solid fa-file-lines"></i> Scope & Specs</li>
         <li class="nav-item" onclick="switchNav(this, 'view-takeoff')"><i class="fa-solid fa-ruler-combined"></i> Takeoffs</li>
         <li class="nav-item" onclick="switchNav(this, 'view-pricing')"><i class="fa-solid fa-tags"></i> Pricing</li>
         <li class="nav-item" onclick="switchNav(this, 'view-qa')"><i class="fa-solid fa-circle-check"></i> QA Review</li>
@@ -136,7 +140,7 @@
     <div class="header-bar">
       <div class="project-title-area">
         <h1 id="active-project-name">Riverside Apartments</h1>
-        <p id="active-project-client">Client: Multiplex Constructions | Scope & Estimating Workspace</p>
+        <p id="active-project-client">Client: Multiplex Constructions | Tender & Estimating Workflow</p>
       </div>
       <div class="header-actions">
         <button class="btn btn-blue" onclick="openNewProjectModal()"><i class="fa-solid fa-plus"></i> New Project</button>
@@ -146,69 +150,125 @@
 
     <!-- Stepper Pipeline -->
     <div class="stepper-card">
-      <div class="step-item active" onclick="switchTab('view-dashboard')"><div class="step-circle"><i class="fa-solid fa-check"></i></div>Scope</div>
+      <div class="step-item active" onclick="switchTab('view-checklist')">
+        <div class="step-circle" id="stepper-pct">0%</div>Checklist
+      </div>
       <div class="step-line"></div>
-      <div class="step-item" onclick="switchTab('view-takeoff')"><div class="step-circle">72%</div>Takeoff</div>
+      <div class="step-item" onclick="switchTab('view-dashboard')"><div class="step-circle"><i class="fa-solid fa-eye"></i></div>Scope</div>
       <div class="step-line"></div>
-      <div class="step-item" onclick="switchTab('view-pricing')"><div class="step-circle">30%</div>Pricing</div>
+      <div class="step-item" onclick="switchTab('view-takeoff')"><div class="step-circle"><i class="fa-solid fa-ruler"></i></div>Takeoff</div>
       <div class="step-line"></div>
-      <div class="step-item" onclick="switchTab('view-qa')"><div class="step-circle"></div>QA</div>
+      <div class="step-item" onclick="switchTab('view-pricing')"><div class="step-circle"><i class="fa-solid fa-dollar-sign"></i></div>Pricing</div>
+      <div class="step-line"></div>
+      <div class="step-item" onclick="switchTab('view-qa')"><div class="step-circle"><i class="fa-solid fa-check"></i></div>QA / BOQ</div>
     </div>
 
-    <!-- VIEW: DASHBOARD / SCOPE -->
-    <div id="view-dashboard" class="view-pane active">
+    <!-- VIEW: WORKFLOW CHECKLIST -->
+    <div id="view-checklist" class="view-pane active">
+      <div class="card">
+        <div class="card-title">
+          <span>Electrical Tender to Take-Off Workflow</span>
+          <span id="progress-text" style="font-size: 0.85rem; color: var(--accent-blue);">0 of 14 Completed (0%)</span>
+        </div>
+        <p class="card-desc">Follow the step-by-step workflow from Tender Receipt to Final BOQ Export.</p>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <!-- Stage 1 -->
+        <div class="workflow-group">
+          <div class="workflow-group-title">Stage 1: Tender Intake & Setup</div>
+          <div class="checklist-container">
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf1" onchange="updateWorkflowProgress()"><span class="task-text">Receive tender package (Outlook / Estimate One)</span></label>
+              <span class="task-tag">Slide 2</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf2" onchange="updateWorkflowProgress()"><span class="task-text">Check Tender Documents (Elec, Specs, Lighting, FFE, Arch drawings)</span></label>
+              <span class="task-tag">Slide 3</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf3" onchange="updateWorkflowProgress()"><span class="task-text">Folder Setup (01 Tender, 02 Subbie Quotes, 03 Docs, 04 Corro, 05 Working)</span></label>
+              <span class="task-tag">Slide 4</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf4" onchange="updateWorkflowProgress()"><span class="task-text">Save all tender files in 03 Documentations folder</span></label>
+              <span class="task-tag">Slide 5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="workflow-group">
+          <div class="workflow-group-title">Stage 2: Review & Systems Identification</div>
+          <div class="checklist-container">
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf5" onchange="updateWorkflowProgress()"><span class="task-text">Project Identification (New vs Existing / Residential / Commercial)</span></label>
+              <span class="task-tag">Slide 6</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf6" onchange="updateWorkflowProgress()"><span class="task-text">Drawing Review (Thorough layout review, notes, legends & specs)</span></label>
+              <span class="task-tag">Slide 7</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf7" onchange="updateWorkflowProgress()"><span class="task-text">System Identification (Lighting, DALI, MSB, DB, Comms, Security, Fire)</span></label>
+              <span class="task-tag">Slide 8</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf8" onchange="updateWorkflowProgress()"><span class="task-text">RFQ Preparation (Switchboards, DALI, Emergency, Security, Fire)</span></label>
+              <span class="task-tag">Slide 9</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="workflow-group">
+          <div class="workflow-group-title">Stage 3: Ground Plan & Take-Off Execution</div>
+          <div class="checklist-container">
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf9" onchange="updateWorkflowProgress()"><span class="task-text">Ground Plan Setup (Scale drawings & recheck Door 0.92m)</span></label>
+              <span class="task-tag">Slide 10</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf10" onchange="updateWorkflowProgress()"><span class="task-text">Take-Off Sequence (Lighting -> Power -> Comms -> Trays -> Submains -> Systems)</span></label>
+              <span class="task-tag">Slide 11</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="workflow-group">
+          <div class="workflow-group-title">Stage 4: Post Take-Off Validation & BOQ</div>
+          <div class="checklist-container">
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf11" onchange="updateWorkflowProgress()"><span class="task-text">Post Take-Off Checks (Cross-check Specs, Legends & FFE schedule)</span></label>
+              <span class="task-tag">Slide 12</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf12" onchange="updateWorkflowProgress()"><span class="task-text">Quantity Validation (Track lights & LED Strips verified and LOCKED)</span></label>
+              <span class="task-tag">Slide 13</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf13" onchange="updateWorkflowProgress()"><span class="task-text">Data Export (Export formatted CSV -> Excel .xlsx)</span></label>
+              <span class="task-tag">Slide 14</span>
+            </div>
+            <div class="task-item">
+              <label class="task-label"><input type="checkbox" id="wf14" onchange="updateWorkflowProgress()"><span class="task-text">Final BOQ Preparation (Organise by system with Brands & BOM)</span></label>
+              <span class="task-tag">Slide 15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW: DASHBOARD / SCOPE OVERVIEW -->
+    <div id="view-dashboard" class="view-pane">
       <div class="content-grid">
         <div class="card">
           <div class="card-title">AI Scope Summary</div>
-          <p class="card-desc" id="active-project-summary">12-unit residential apartment development. Electrical scope includes lighting, general power, smoke alarms, air-conditioning supplies, distribution boards, and external lighting.</p>
-        </div>
-
-        <div class="card">
-          <div class="card-title">
-            <span>Scope Categories</span>
-          </div>
-
-          <div class="scope-list">
-            <div class="scope-row">
-              <div class="scope-name">
-                <input type="checkbox" id="cat1" checked onchange="saveToCloud()">
-                <i class="fa-solid fa-lightbulb" style="color: var(--accent-blue);"></i> Lighting
-              </div>
-              <span class="badge badge-green" id="badge-cat1" onclick="toggleBadge('badge-cat1')"><i class="fa-solid fa-check"></i> Identified</span>
-            </div>
-
-            <div class="scope-row">
-              <div class="scope-name">
-                <input type="checkbox" id="cat2" checked onchange="saveToCloud()">
-                <i class="fa-solid fa-plug" style="color: var(--accent-blue);"></i> Power
-              </div>
-              <span class="badge badge-green" id="badge-cat2" onclick="toggleBadge('badge-cat2')"><i class="fa-solid fa-check"></i> Identified</span>
-            </div>
-
-            <div class="scope-row">
-              <div class="scope-name">
-                <input type="checkbox" id="cat3" checked onchange="saveToCloud()">
-                <i class="fa-solid fa-network-wired" style="color: var(--accent-blue);"></i> Distribution
-              </div>
-              <span class="badge badge-green" id="badge-cat3" onclick="toggleBadge('badge-cat3')"><i class="fa-solid fa-check"></i> Identified</span>
-            </div>
-
-            <div class="scope-row">
-              <div class="scope-name">
-                <input type="checkbox" id="cat4" onchange="saveToCloud()">
-                <i class="fa-solid fa-bell" style="color: var(--accent-blue);"></i> Smoke Alarms
-              </div>
-              <span class="badge badge-amber" id="badge-cat4" onclick="toggleBadge('badge-cat4')"><i class="fa-solid fa-triangle-exclamation"></i> Review Required</span>
-            </div>
-
-            <div class="scope-row">
-              <div class="scope-name">
-                <input type="checkbox" id="cat5" onchange="saveToCloud()">
-                <i class="fa-solid fa-fan" style="color: var(--accent-blue);"></i> HVAC Supplies
-              </div>
-              <span class="badge badge-gray" id="badge-cat5" onclick="toggleBadge('badge-cat5')">Not Identified</span>
-            </div>
-          </div>
+          <p class="card-desc" id="active-project-summary">12-unit residential apartment development. Scope includes lighting, general power, smoke alarms, air-conditioning, distribution boards, and external lighting.</p>
         </div>
       </div>
     </div>
@@ -222,26 +282,10 @@
         </div>
         <table class="data-table">
           <thead>
-            <tr>
-              <th>Project Name</th>
-              <th>Client Name</th>
-              <th>Est. Value</th>
-              <th>Due Date</th>
-              <th>Action</th>
-            </tr>
+            <tr><th>Project Name</th><th>Client Name</th><th>Est. Value</th><th>Due Date</th><th>Action</th></tr>
           </thead>
-          <tbody id="projects-table-body">
-            <!-- Dynamic project list renders here -->
-          </tbody>
+          <tbody id="projects-table-body"></tbody>
         </table>
-      </div>
-    </div>
-
-    <!-- VIEW: SCOPE & SPECS -->
-    <div id="view-scope" class="view-pane">
-      <div class="card">
-        <div class="card-title">Scope Specification Details</div>
-        <p class="card-desc">Comprehensive project scope definitions and architect notes.</p>
       </div>
     </div>
 
@@ -254,9 +298,8 @@
             <tr><th>Item Description</th><th>Qty</th><th>Unit</th><th>Status</th></tr>
           </thead>
           <tbody>
-            <tr><td>LED Downlight 10W</td><td>142</td><td>ea</td><td><span class="badge badge-green">Verified</span></td></tr>
-            <tr><td>Double GPO 10A</td><td>86</td><td>ea</td><td><span class="badge badge-green">Verified</span></td></tr>
-            <tr><td>Distribution Board 24-way</td><td>2</td><td>ea</td><td><span class="badge badge-amber">Review</span></td></tr>
+            <tr><td>LED Downlight 10W</td><td>142</td><td>ea</td><td><span class="task-tag" style="background:#dcfce7;color:#15803d;">Verified</span></td></tr>
+            <tr><td>Double GPO 10A</td><td>86</td><td>ea</td><td><span class="task-tag" style="background:#dcfce7;color:#15803d;">Verified</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -268,11 +311,10 @@
         <div class="card-title">Pricing Breakdown</div>
         <table class="data-table">
           <thead>
-            <tr><th>Item</th><th>Qty</th><th>Material Rate</th><th>Labor Rate</th><th>Total</th></tr>
+            <tr><th>Item</th><th>Qty</th><th>Material</th><th>Labor</th><th>Total</th></tr>
           </thead>
           <tbody>
             <tr><td>LED Downlight 10W</td><td>142</td><td>$24.00</td><td>$35.00</td><td>$8,378.00</td></tr>
-            <tr><td>Double GPO 10A</td><td>86</td><td>$18.00</td><td>$30.00</td><td>$4,128.00</td></tr>
           </tbody>
         </table>
       </div>
@@ -281,11 +323,8 @@
     <!-- VIEW: QA REVIEW -->
     <div id="view-qa" class="view-pane">
       <div class="card">
-        <div class="card-title">QA & Compliance Checklist</div>
-        <div class="scope-list">
-          <div class="scope-row"><div class="scope-name"><input type="checkbox" checked> AS3000 Standards Sweep</div><span class="badge badge-green">Passed</span></div>
-          <div class="scope-row"><div class="scope-name"><input type="checkbox"> Subcontractor Quotes Verified</div><span class="badge badge-amber">Pending</span></div>
-        </div>
+        <div class="card-title">Final BOQ & Compliance Summary</div>
+        <p class="card-desc">Review exported quantities before issuing final tender submission.</p>
       </div>
     </div>
   </main>
@@ -312,10 +351,6 @@
         <label>Submission Due Date</label>
         <input type="date" id="new-due-date" />
       </div>
-      <div class="form-group">
-        <label>Scope Description / Notes</label>
-        <textarea id="new-scope-desc" rows="3" placeholder="Enter brief project scope overview..."></textarea>
-      </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
         <button type="button" class="btn btn-secondary" onclick="closeNewProjectModal()">Cancel</button>
         <button type="submit" class="btn btn-blue">Create Project</button>
@@ -329,15 +364,14 @@
 <script>
   const GOOGLE_API_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
 
-  // In-Memory Database Storage
   let projects = [
     {
       projectName: "Riverside Apartments",
       clientName: "Multiplex Constructions",
       contractValue: "$250,000",
       dueDate: "2026-10-15",
-      summary: "12-unit residential apartment development. Electrical scope includes lighting, general power, smoke alarms, air-conditioning supplies, distribution boards, and external lighting.",
-      tasks: { cat1: true, cat2: true, cat3: true, cat4: false, cat5: false }
+      summary: "12-unit residential apartment development.",
+      workflowTasks: { wf1: true, wf2: true, wf3: true, wf4: false }
     }
   ];
 
@@ -355,19 +389,32 @@
     if (target) target.classList.add('active');
   }
 
-  function toggleBadge(badgeId) {
-    const badge = document.getElementById(badgeId);
-    if (!badge) return;
+  function updateWorkflowProgress() {
+    const checkboxes = document.querySelectorAll('#view-checklist input[type="checkbox"]');
+    let checkedCount = 0;
 
-    if (badge.classList.contains('badge-green')) {
-      badge.className = 'badge badge-amber';
-      badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Review Required';
-    } else if (badge.classList.contains('badge-amber')) {
-      badge.className = 'badge badge-gray';
-      badge.textContent = 'Not Identified';
-    } else {
-      badge.className = 'badge badge-green';
-      badge.innerHTML = '<i class="fa-solid fa-check"></i> Identified';
+    checkboxes.forEach(box => {
+      const item = box.closest('.task-item');
+      if (box.checked) {
+        checkedCount++;
+        item.classList.add('completed');
+      } else {
+        item.classList.remove('completed');
+      }
+    });
+
+    const total = checkboxes.length;
+    const percent = Math.round((checkedCount / total) * 100);
+
+    document.getElementById('progress-bar-fill').style.width = percent + '%';
+    document.getElementById('progress-text').textContent = `${checkedCount} of ${total} Completed (${percent}%)`;
+    document.getElementById('stepper-pct').textContent = percent + '%';
+
+    // Store state in current project
+    const p = projects[currentProjectIndex];
+    if (p) {
+      p.workflowTasks = p.workflowTasks || {};
+      checkboxes.forEach(box => p.workflowTasks[box.id] = box.checked);
     }
   }
 
@@ -386,15 +433,14 @@
     const client = document.getElementById('new-client-name').value;
     const val = document.getElementById('new-contract-val').value || "$0";
     const due = document.getElementById('new-due-date').value || "N/A";
-    const desc = document.getElementById('new-scope-desc').value || "No scope summary provided.";
 
     const newProj = {
       projectName: name,
       clientName: client,
       contractValue: val,
       dueDate: due,
-      summary: desc,
-      tasks: { cat1: true, cat2: true, cat3: false, cat4: false, cat5: false }
+      summary: "New project created.",
+      workflowTasks: {}
     };
 
     projects.push(newProj);
@@ -403,15 +449,14 @@
     renderProjectDetails();
     renderProjectsTable();
     closeNewProjectModal();
-    switchTab('view-dashboard');
+    switchTab('view-checklist');
     showToast(`Project "${name}" Created!`);
-    saveToCloud();
   }
 
   function selectProject(index) {
     currentProjectIndex = index;
     renderProjectDetails();
-    switchTab('view-dashboard');
+    switchTab('view-checklist');
     showToast(`Loaded "${projects[index].projectName}"`);
   }
 
@@ -420,12 +465,14 @@
     if (!p) return;
 
     document.getElementById('active-project-name').textContent = p.projectName;
-    document.getElementById('active-project-client').textContent = `Client: ${p.clientName} | Scope & Estimating Workspace`;
-    document.getElementById('active-project-summary').textContent = p.summary;
+    document.getElementById('active-project-client').textContent = `Client: ${p.clientName} | Tender & Estimating Workflow`;
 
-    document.querySelectorAll('#view-dashboard input[type="checkbox"]').forEach(box => {
-      box.checked = !!(p.tasks && p.tasks[box.id]);
+    const tasks = p.workflowTasks || {};
+    document.querySelectorAll('#view-checklist input[type="checkbox"]').forEach(box => {
+      box.checked = !!tasks[box.id];
     });
+
+    updateWorkflowProgress();
   }
 
   function renderProjectsTable() {
@@ -457,11 +504,6 @@
     const p = projects[currentProjectIndex];
     if (!p) return;
 
-    // Save active checkboxes
-    document.querySelectorAll('#view-dashboard input[type="checkbox"]').forEach(box => {
-      p.tasks[box.id] = box.checked;
-    });
-
     if (!GOOGLE_API_URL || GOOGLE_API_URL.includes("YOUR_GOOGLE")) {
       setTimeout(() => showToast("Saved! (Local Cache)"), 600);
       return;
@@ -480,7 +522,6 @@
     }
   }
 
-  // Initial Initialization
   renderProjectDetails();
   renderProjectsTable();
 </script>
