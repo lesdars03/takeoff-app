@@ -40,7 +40,7 @@
     .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.875rem; color: var(--text-muted); cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
     .nav-item:hover, .nav-item.active { background: #f0fdf4; color: var(--accent-blue); font-weight: 600; }
     
-    .sidebar-footer { border-top: 1px solid var(--border-color); pt: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .sidebar-footer { border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
 
     /* Main Area */
     main { flex: 1; overflow-y: auto; padding: 2rem 2.5rem; }
@@ -54,6 +54,7 @@
     .btn { background: var(--accent-navy); color: #fff; border: none; padding: 0.55rem 1.1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.9; }
     .btn-secondary { background: #fff; color: var(--text-main); border: 1px solid var(--border-color); }
+    .btn-blue { background: var(--accent-blue); color: #fff; }
 
     /* Workflow Stepper */
     .stepper-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
@@ -69,7 +70,7 @@
 
     /* Content Cards */
     .content-grid { display: flex; flex-direction: column; gap: 1.5rem; max-width: 1000px; }
-    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
     .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
     .card-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
 
@@ -83,18 +84,25 @@
     .badge-amber { background: var(--status-amber-bg); color: var(--status-amber-text); }
     .badge-gray { background: var(--status-gray-bg); color: var(--status-gray-text); }
 
-    /* Pricing & QA Tables */
+    /* Data Tables */
     .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
     .data-table th, .data-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
     .data-table th { background: #f9fafb; font-weight: 600; color: var(--text-muted); }
 
-    /* Modal Drawer */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 100; }
+    /* Modal Form Styles */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100; }
     .modal-overlay.active { display: flex; }
-    .modal-box { background: #fff; border-radius: 12px; width: 500px; max-width: 90%; padding: 1.5rem; }
+    .modal-box { background: #fff; border-radius: 12px; width: 520px; max-width: 90%; padding: 1.75rem; }
+    
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .form-group label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-blue); }
 
     input[type="checkbox"] { accent-color: var(--accent-blue); width: 18px; height: 18px; cursor: pointer; }
-    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--accent-navy); color: #fff; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--accent-navy); color: #fff; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 200; }
   </style>
 </head>
 <body>
@@ -123,22 +131,22 @@
     </div>
   </aside>
 
-  <!-- Workspace -->
+  <!-- Main Workspace -->
   <main>
     <div class="header-bar">
       <div class="project-title-area">
         <h1 id="active-project-name">Riverside Apartments</h1>
-        <p>Takeoff & Estimating Workspace</p>
+        <p id="active-project-client">Client: Multiplex Constructions | Scope & Estimating Workspace</p>
       </div>
       <div class="header-actions">
+        <button class="btn btn-blue" onclick="openNewProjectModal()"><i class="fa-solid fa-plus"></i> New Project</button>
         <button class="btn btn-secondary" onclick="saveToCloud()"><i class="fa-solid fa-cloud"></i> Save Project</button>
-        <button class="btn" onclick="openReviewModal()"><i class="fa-solid fa-magnifying-glass"></i> Review Scope</button>
       </div>
     </div>
 
-    <!-- Interactive Stepper -->
+    <!-- Stepper Pipeline -->
     <div class="stepper-card">
-      <div class="step-item active" onclick="switchTab('view-scope')"><div class="step-circle"><i class="fa-solid fa-check"></i></div>Scope</div>
+      <div class="step-item active" onclick="switchTab('view-dashboard')"><div class="step-circle"><i class="fa-solid fa-check"></i></div>Scope</div>
       <div class="step-line"></div>
       <div class="step-item" onclick="switchTab('view-takeoff')"><div class="step-circle">72%</div>Takeoff</div>
       <div class="step-line"></div>
@@ -151,20 +159,19 @@
     <div id="view-dashboard" class="view-pane active">
       <div class="content-grid">
         <div class="card">
-          <div class="card-title">AI Project Summary</div>
-          <p class="card-desc">12-unit residential apartment development. Electrical scope includes lighting, general power, smoke alarms, air-conditioning supplies, distribution boards, and external lighting.</p>
+          <div class="card-title">AI Scope Summary</div>
+          <p class="card-desc" id="active-project-summary">12-unit residential apartment development. Electrical scope includes lighting, general power, smoke alarms, air-conditioning supplies, distribution boards, and external lighting.</p>
         </div>
 
         <div class="card">
           <div class="card-title">
             <span>Scope Categories</span>
-            <button class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="openReviewModal()">Review Scope</button>
           </div>
 
           <div class="scope-list">
             <div class="scope-row">
               <div class="scope-name">
-                <input type="checkbox" id="cat1" checked onchange="handleCheckboxChange()">
+                <input type="checkbox" id="cat1" checked onchange="saveToCloud()">
                 <i class="fa-solid fa-lightbulb" style="color: var(--accent-blue);"></i> Lighting
               </div>
               <span class="badge badge-green" id="badge-cat1" onclick="toggleBadge('badge-cat1')"><i class="fa-solid fa-check"></i> Identified</span>
@@ -172,7 +179,7 @@
 
             <div class="scope-row">
               <div class="scope-name">
-                <input type="checkbox" id="cat2" checked onchange="handleCheckboxChange()">
+                <input type="checkbox" id="cat2" checked onchange="saveToCloud()">
                 <i class="fa-solid fa-plug" style="color: var(--accent-blue);"></i> Power
               </div>
               <span class="badge badge-green" id="badge-cat2" onclick="toggleBadge('badge-cat2')"><i class="fa-solid fa-check"></i> Identified</span>
@@ -180,7 +187,7 @@
 
             <div class="scope-row">
               <div class="scope-name">
-                <input type="checkbox" id="cat3" checked onchange="handleCheckboxChange()">
+                <input type="checkbox" id="cat3" checked onchange="saveToCloud()">
                 <i class="fa-solid fa-network-wired" style="color: var(--accent-blue);"></i> Distribution
               </div>
               <span class="badge badge-green" id="badge-cat3" onclick="toggleBadge('badge-cat3')"><i class="fa-solid fa-check"></i> Identified</span>
@@ -188,7 +195,7 @@
 
             <div class="scope-row">
               <div class="scope-name">
-                <input type="checkbox" id="cat4" onchange="handleCheckboxChange()">
+                <input type="checkbox" id="cat4" onchange="saveToCloud()">
                 <i class="fa-solid fa-bell" style="color: var(--accent-blue);"></i> Smoke Alarms
               </div>
               <span class="badge badge-amber" id="badge-cat4" onclick="toggleBadge('badge-cat4')"><i class="fa-solid fa-triangle-exclamation"></i> Review Required</span>
@@ -196,7 +203,7 @@
 
             <div class="scope-row">
               <div class="scope-name">
-                <input type="checkbox" id="cat5" onchange="handleCheckboxChange()">
+                <input type="checkbox" id="cat5" onchange="saveToCloud()">
                 <i class="fa-solid fa-fan" style="color: var(--accent-blue);"></i> HVAC Supplies
               </div>
               <span class="badge badge-gray" id="badge-cat5" onclick="toggleBadge('badge-cat5')">Not Identified</span>
@@ -209,15 +216,32 @@
     <!-- VIEW: PROJECTS -->
     <div id="view-projects" class="view-pane">
       <div class="card">
-        <div class="card-title">Projects Library</div>
+        <div class="card-title">
+          <span>Projects Directory</span>
+          <button class="btn btn-blue" onclick="openNewProjectModal()"><i class="fa-solid fa-plus"></i> New Project</button>
+        </div>
         <table class="data-table">
           <thead>
-            <tr><th>Project Name</th><th>Status</th><th>Progress</th><th>Action</th></tr>
+            <tr>
+              <th>Project Name</th>
+              <th>Client Name</th>
+              <th>Est. Value</th>
+              <th>Due Date</th>
+              <th>Action</th>
+            </tr>
           </thead>
           <tbody id="projects-table-body">
-            <tr><td>Riverside Apartments</td><td>In Progress</td><td>72%</td><td><button class="btn" style="padding:0.2rem 0.5rem;" onclick="switchTab('view-dashboard')">Open</button></td></tr>
+            <!-- Dynamic project list renders here -->
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- VIEW: SCOPE & SPECS -->
+    <div id="view-scope" class="view-pane">
+      <div class="card">
+        <div class="card-title">Scope Specification Details</div>
+        <p class="card-desc">Comprehensive project scope definitions and architect notes.</p>
       </div>
     </div>
 
@@ -225,7 +249,6 @@
     <div id="view-takeoff" class="view-pane">
       <div class="card">
         <div class="card-title">Takeoff Workspace</div>
-        <p class="card-desc">Quantities and counts extracted directly from plan drawings.</p>
         <table class="data-table">
           <thead>
             <tr><th>Item Description</th><th>Qty</th><th>Unit</th><th>Status</th></tr>
@@ -261,26 +284,64 @@
         <div class="card-title">QA & Compliance Checklist</div>
         <div class="scope-list">
           <div class="scope-row"><div class="scope-name"><input type="checkbox" checked> AS3000 Standards Sweep</div><span class="badge badge-green">Passed</span></div>
-          <div class="scope-row"><div class="scope-name"><input type="checkbox"> Subbie Quotations Verified</div><span class="badge badge-amber">Pending</span></div>
+          <div class="scope-row"><div class="scope-name"><input type="checkbox"> Subcontractor Quotes Verified</div><span class="badge badge-amber">Pending</span></div>
         </div>
       </div>
     </div>
   </main>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modal-review">
+<!-- Modal: Add New Project -->
+<div class="modal-overlay" id="modal-new-project">
   <div class="modal-box">
-    <div class="card-title">Scope Review Summary</div>
-    <p class="card-desc" style="margin-bottom: 1rem;">Verify all detected electrical components before locking takeoff values.</p>
-    <button class="btn" onclick="closeReviewModal()">Done</button>
+    <div class="card-title">Add New Project</div>
+    <form id="new-project-form" onsubmit="handleCreateProject(event)">
+      <div class="form-group">
+        <label>Project Name</label>
+        <input type="text" id="new-proj-name" placeholder="e.g. Commercial Hub Phase 2" required />
+      </div>
+      <div class="form-group">
+        <label>Client / Builder Name</label>
+        <input type="text" id="new-client-name" placeholder="e.g. Multiplex Constructions" required />
+      </div>
+      <div class="form-group">
+        <label>Estimated Value</label>
+        <input type="text" id="new-contract-val" placeholder="e.g. $150,000" />
+      </div>
+      <div class="form-group">
+        <label>Submission Due Date</label>
+        <input type="date" id="new-due-date" />
+      </div>
+      <div class="form-group">
+        <label>Scope Description / Notes</label>
+        <textarea id="new-scope-desc" rows="3" placeholder="Enter brief project scope overview..."></textarea>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+        <button type="button" class="btn btn-secondary" onclick="closeNewProjectModal()">Cancel</button>
+        <button type="submit" class="btn btn-blue">Create Project</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <div class="toast" id="toast-msg">Saved to Cloud</div>
 
 <script>
-  const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzl61bAq7IsFCL8vqT4M5sUNoY95SLhsZcJJFEYy6YdsCKOmnXTS62CIptb4S4bihaCpQ/exec";
+  const GOOGLE_API_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+
+  // In-Memory Database Storage
+  let projects = [
+    {
+      projectName: "Riverside Apartments",
+      clientName: "Multiplex Constructions",
+      contractValue: "$250,000",
+      dueDate: "2026-10-15",
+      summary: "12-unit residential apartment development. Electrical scope includes lighting, general power, smoke alarms, air-conditioning supplies, distribution boards, and external lighting.",
+      tasks: { cat1: true, cat2: true, cat3: true, cat4: false, cat5: false }
+    }
+  ];
+
+  let currentProjectIndex = 0;
 
   function switchNav(el, viewId) {
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -310,12 +371,78 @@
     }
   }
 
-  function openReviewModal() {
-    document.getElementById('modal-review').classList.add('active');
+  function openNewProjectModal() {
+    document.getElementById('modal-new-project').classList.add('active');
   }
 
-  function closeReviewModal() {
-    document.getElementById('modal-review').classList.remove('active');
+  function closeNewProjectModal() {
+    document.getElementById('modal-new-project').classList.remove('active');
+    document.getElementById('new-project-form').reset();
+  }
+
+  function handleCreateProject(e) {
+    e.preventDefault();
+    const name = document.getElementById('new-proj-name').value;
+    const client = document.getElementById('new-client-name').value;
+    const val = document.getElementById('new-contract-val').value || "$0";
+    const due = document.getElementById('new-due-date').value || "N/A";
+    const desc = document.getElementById('new-scope-desc').value || "No scope summary provided.";
+
+    const newProj = {
+      projectName: name,
+      clientName: client,
+      contractValue: val,
+      dueDate: due,
+      summary: desc,
+      tasks: { cat1: true, cat2: true, cat3: false, cat4: false, cat5: false }
+    };
+
+    projects.push(newProj);
+    currentProjectIndex = projects.length - 1;
+
+    renderProjectDetails();
+    renderProjectsTable();
+    closeNewProjectModal();
+    switchTab('view-dashboard');
+    showToast(`Project "${name}" Created!`);
+    saveToCloud();
+  }
+
+  function selectProject(index) {
+    currentProjectIndex = index;
+    renderProjectDetails();
+    switchTab('view-dashboard');
+    showToast(`Loaded "${projects[index].projectName}"`);
+  }
+
+  function renderProjectDetails() {
+    const p = projects[currentProjectIndex];
+    if (!p) return;
+
+    document.getElementById('active-project-name').textContent = p.projectName;
+    document.getElementById('active-project-client').textContent = `Client: ${p.clientName} | Scope & Estimating Workspace`;
+    document.getElementById('active-project-summary').textContent = p.summary;
+
+    document.querySelectorAll('#view-dashboard input[type="checkbox"]').forEach(box => {
+      box.checked = !!(p.tasks && p.tasks[box.id]);
+    });
+  }
+
+  function renderProjectsTable() {
+    const tbody = document.getElementById('projects-table-body');
+    tbody.innerHTML = projects.map((p, index) => `
+      <tr>
+        <td><strong>${p.projectName}</strong></td>
+        <td>${p.clientName}</td>
+        <td>${p.contractValue}</td>
+        <td>${p.dueDate}</td>
+        <td>
+          <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="selectProject(${index})">
+            Open
+          </button>
+        </td>
+      </tr>
+    `).join('');
   }
 
   function showToast(msg) {
@@ -325,34 +452,37 @@
     setTimeout(() => toast.style.display = 'none', 3000);
   }
 
-  function handleCheckboxChange() {
-    showToast("Changes updated locally");
-  }
-
   async function saveToCloud() {
     showToast("Saving to Cloud...");
+    const p = projects[currentProjectIndex];
+    if (!p) return;
+
+    // Save active checkboxes
+    document.querySelectorAll('#view-dashboard input[type="checkbox"]').forEach(box => {
+      p.tasks[box.id] = box.checked;
+    });
+
     if (!GOOGLE_API_URL || GOOGLE_API_URL.includes("YOUR_GOOGLE")) {
-      setTimeout(() => showToast("Saved! (Demo Mode)"), 800);
+      setTimeout(() => showToast("Saved! (Local Cache)"), 600);
       return;
     }
-
-    const tasks = {};
-    document.querySelectorAll('input[type="checkbox"]').forEach(box => {
-      if (box.id) tasks[box.id] = box.checked;
-    });
 
     try {
       await fetch(GOOGLE_API_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectName: "Riverside Apartments", tasks })
+        body: JSON.stringify(p)
       });
-      showToast("Saved to Google Sheets!");
+      showToast("Synced to Google Sheets!");
     } catch (e) {
-      showToast("Error saving data");
+      showToast("Error syncing data");
     }
   }
+
+  // Initial Initialization
+  renderProjectDetails();
+  renderProjectsTable();
 </script>
 
 </body>
