@@ -120,9 +120,9 @@
         <span>Australian Estimator Copilot</span>
       </div>
       <ul class="nav-list">
-        <li class="nav-item active" onclick="switchNav(this, 'view-dashboard')"><i class="fa-solid fa-table-cells-large"></i> Dashboard</li>
-        <li class="nav-item" onclick="switchNav(this, 'view-checklist')"><i class="fa-solid fa-list-check"></i> Workflow Checklist</li>
-        <li class="nav-item" onclick="switchNav(this, 'view-projects')"><i class="fa-solid fa-folder"></i> Projects</li>
+        <li class="nav-item active" onclick="switchNav(this, 'view-checklist')"><i class="fa-solid fa-list-check"></i> Workflow Checklist</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-projects')"><i class="fa-solid fa-folder"></i> Projects Directory</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-dashboard')"><i class="fa-solid fa-table-cells-large"></i> Scope Overview</li>
         <li class="nav-item" onclick="switchNav(this, 'view-takeoff')"><i class="fa-solid fa-ruler-combined"></i> Takeoffs</li>
         <li class="nav-item" onclick="switchNav(this, 'view-pricing')"><i class="fa-solid fa-tags"></i> Pricing</li>
         <li class="nav-item" onclick="switchNav(this, 'view-qa')"><i class="fa-solid fa-circle-check"></i> QA Review</li>
@@ -167,10 +167,10 @@
     <div id="view-checklist" class="view-pane active">
       <div class="card">
         <div class="card-title">
-          <span>Electrical Tender to Take-Off Workflow</span>
+          <span>Project Workflow Checklist</span>
           <span id="progress-text" style="font-size: 0.85rem; color: var(--accent-blue);">0 of 14 Completed (0%)</span>
         </div>
-        <p class="card-desc">Follow the step-by-step workflow from Tender Receipt to Final BOQ Export.</p>
+        <p class="card-desc">Complete each stage of the tender to take-off process for this project.</p>
         <div class="progress-bar-container">
           <div class="progress-bar-fill" id="progress-bar-fill"></div>
         </div>
@@ -182,19 +182,19 @@
           <div class="workflow-group-title">Stage 1: Tender Intake & Setup</div>
           <div class="checklist-container">
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf1" onchange="updateWorkflowProgress()"><span class="task-text">Receive tender package (Outlook / Estimate One)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf1" onchange="toggleTask(this)"><span class="task-text">Receive tender package (Outlook / Estimate One)</span></label>
               <span class="task-tag">Slide 2</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf2" onchange="updateWorkflowProgress()"><span class="task-text">Check Tender Documents (Elec, Specs, Lighting, FFE, Arch drawings)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf2" onchange="toggleTask(this)"><span class="task-text">Check Tender Documents (Elec, Specs, Lighting, FFE, Arch drawings)</span></label>
               <span class="task-tag">Slide 3</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf3" onchange="updateWorkflowProgress()"><span class="task-text">Folder Setup (01 Tender, 02 Subbie Quotes, 03 Docs, 04 Corro, 05 Working)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf3" onchange="toggleTask(this)"><span class="task-text">Folder Setup (01 Tender, 02 Subbie Quotes, 03 Docs, 04 Corro, 05 Working)</span></label>
               <span class="task-tag">Slide 4</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf4" onchange="updateWorkflowProgress()"><span class="task-text">Save all tender files in 03 Documentations folder</span></label>
+              <label class="task-label"><input type="checkbox" id="wf4" onchange="toggleTask(this)"><span class="task-text">Save all tender files in 03 Documentations folder</span></label>
               <span class="task-tag">Slide 5</span>
             </div>
           </div>
@@ -205,19 +205,19 @@
           <div class="workflow-group-title">Stage 2: Review & Systems Identification</div>
           <div class="checklist-container">
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf5" onchange="updateWorkflowProgress()"><span class="task-text">Project Identification (New vs Existing / Residential / Commercial)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf5" onchange="toggleTask(this)"><span class="task-text">Project Identification (New vs Existing / Residential / Commercial)</span></label>
               <span class="task-tag">Slide 6</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf6" onchange="updateWorkflowProgress()"><span class="task-text">Drawing Review (Thorough layout review, notes, legends & specs)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf6" onchange="toggleTask(this)"><span class="task-text">Drawing Review (Thorough layout review, notes, legends & specs)</span></label>
               <span class="task-tag">Slide 7</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf7" onchange="updateWorkflowProgress()"><span class="task-text">System Identification (Lighting, DALI, MSB, DB, Comms, Security, Fire)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf7" onchange="toggleTask(this)"><span class="task-text">System Identification (Lighting, DALI, MSB, DB, Comms, Security, Fire)</span></label>
               <span class="task-tag">Slide 8</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf8" onchange="updateWorkflowProgress()"><span class="task-text">RFQ Preparation (Switchboards, DALI, Emergency, Security, Fire)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf8" onchange="toggleTask(this)"><span class="task-text">RFQ Preparation (Switchboards, DALI, Emergency, Security, Fire)</span></label>
               <span class="task-tag">Slide 9</span>
             </div>
           </div>
@@ -228,11 +228,11 @@
           <div class="workflow-group-title">Stage 3: Ground Plan & Take-Off Execution</div>
           <div class="checklist-container">
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf9" onchange="updateWorkflowProgress()"><span class="task-text">Ground Plan Setup (Scale drawings & recheck Door 0.92m)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf9" onchange="toggleTask(this)"><span class="task-text">Ground Plan Setup (Scale drawings & recheck Door 0.92m)</span></label>
               <span class="task-tag">Slide 10</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf10" onchange="updateWorkflowProgress()"><span class="task-text">Take-Off Sequence (Lighting -> Power -> Comms -> Trays -> Submains -> Systems)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf10" onchange="toggleTask(this)"><span class="task-text">Take-Off Sequence (Lighting -> Power -> Comms -> Trays -> Submains -> Systems)</span></label>
               <span class="task-tag">Slide 11</span>
             </div>
           </div>
@@ -243,19 +243,19 @@
           <div class="workflow-group-title">Stage 4: Post Take-Off Validation & BOQ</div>
           <div class="checklist-container">
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf11" onchange="updateWorkflowProgress()"><span class="task-text">Post Take-Off Checks (Cross-check Specs, Legends & FFE schedule)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf11" onchange="toggleTask(this)"><span class="task-text">Post Take-Off Checks (Cross-check Specs, Legends & FFE schedule)</span></label>
               <span class="task-tag">Slide 12</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf12" onchange="updateWorkflowProgress()"><span class="task-text">Quantity Validation (Track lights & LED Strips verified and LOCKED)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf12" onchange="toggleTask(this)"><span class="task-text">Quantity Validation (Track lights & LED Strips verified and LOCKED)</span></label>
               <span class="task-tag">Slide 13</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf13" onchange="updateWorkflowProgress()"><span class="task-text">Data Export (Export formatted CSV -> Excel .xlsx)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf13" onchange="toggleTask(this)"><span class="task-text">Data Export (Export formatted CSV -> Excel .xlsx)</span></label>
               <span class="task-tag">Slide 14</span>
             </div>
             <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf14" onchange="updateWorkflowProgress()"><span class="task-text">Final BOQ Preparation (Organise by system with Brands & BOM)</span></label>
+              <label class="task-label"><input type="checkbox" id="wf14" onchange="toggleTask(this)"><span class="task-text">Final BOQ Preparation (Organise by system with Brands & BOM)</span></label>
               <span class="task-tag">Slide 15</span>
             </div>
           </div>
@@ -268,7 +268,7 @@
       <div class="content-grid">
         <div class="card">
           <div class="card-title">AI Scope Summary</div>
-          <p class="card-desc" id="active-project-summary">12-unit residential apartment development. Scope includes lighting, general power, smoke alarms, air-conditioning, distribution boards, and external lighting.</p>
+          <p class="card-desc" id="active-project-summary">12-unit residential apartment development.</p>
         </div>
       </div>
     </div>
@@ -282,7 +282,7 @@
         </div>
         <table class="data-table">
           <thead>
-            <tr><th>Project Name</th><th>Client Name</th><th>Est. Value</th><th>Due Date</th><th>Action</th></tr>
+            <tr><th>Project Name</th><th>Client Name</th><th>Est. Value</th><th>Checklist Progress</th><th>Due Date</th><th>Action</th></tr>
           </thead>
           <tbody id="projects-table-body"></tbody>
         </table>
@@ -293,15 +293,7 @@
     <div id="view-takeoff" class="view-pane">
       <div class="card">
         <div class="card-title">Takeoff Workspace</div>
-        <table class="data-table">
-          <thead>
-            <tr><th>Item Description</th><th>Qty</th><th>Unit</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>LED Downlight 10W</td><td>142</td><td>ea</td><td><span class="task-tag" style="background:#dcfce7;color:#15803d;">Verified</span></td></tr>
-            <tr><td>Double GPO 10A</td><td>86</td><td>ea</td><td><span class="task-tag" style="background:#dcfce7;color:#15803d;">Verified</span></td></tr>
-          </tbody>
-        </table>
+        <p class="card-desc">System takeoffs for active project.</p>
       </div>
     </div>
 
@@ -309,14 +301,7 @@
     <div id="view-pricing" class="view-pane">
       <div class="card">
         <div class="card-title">Pricing Breakdown</div>
-        <table class="data-table">
-          <thead>
-            <tr><th>Item</th><th>Qty</th><th>Material</th><th>Labor</th><th>Total</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>LED Downlight 10W</td><td>142</td><td>$24.00</td><td>$35.00</td><td>$8,378.00</td></tr>
-          </tbody>
-        </table>
+        <p class="card-desc">Pricing rates and labor calculations.</p>
       </div>
     </div>
 
@@ -324,7 +309,7 @@
     <div id="view-qa" class="view-pane">
       <div class="card">
         <div class="card-title">Final BOQ & Compliance Summary</div>
-        <p class="card-desc">Review exported quantities before issuing final tender submission.</p>
+        <p class="card-desc">Review exported quantities before issuing final submission.</p>
       </div>
     </div>
   </main>
@@ -362,8 +347,9 @@
 <div class="toast" id="toast-msg">Saved to Cloud</div>
 
 <script>
-  const GOOGLE_API_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+  const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzl61bAq7IsFCL8vqT4M5sUNoY95SLhsZcJJFEYy6YdsCKOmnXTS62CIptb4S4bihaCpQ/exec";
 
+  // Individual Per-Project State
   let projects = [
     {
       projectName: "Riverside Apartments",
@@ -372,6 +358,14 @@
       dueDate: "2026-10-15",
       summary: "12-unit residential apartment development.",
       workflowTasks: { wf1: true, wf2: true, wf3: true, wf4: false }
+    },
+    {
+      projectName: "Commercial Warehouse - Unit 4",
+      clientName: "BuildCorp Australia",
+      contractValue: "$110,000",
+      dueDate: "2026-11-02",
+      summary: "High bay lighting and 3-phase power distribution installation.",
+      workflowTasks: { wf1: true, wf2: false }
     }
   ];
 
@@ -389,13 +383,36 @@
     if (target) target.classList.add('active');
   }
 
-  function updateWorkflowProgress() {
+  function toggleTask(checkbox) {
+    const currentProj = projects[currentProjectIndex];
+    if (!currentProj) return;
+
+    if (!currentProj.workflowTasks) {
+      currentProj.workflowTasks = {};
+    }
+
+    // Update specific project state
+    currentProj.workflowTasks[checkbox.id] = checkbox.checked;
+    
+    updateWorkflowUI();
+    renderProjectsTable();
+    saveToCloud();
+  }
+
+  function updateWorkflowUI() {
+    const currentProj = projects[currentProjectIndex];
+    const tasks = (currentProj && currentProj.workflowTasks) ? currentProj.workflowTasks : {};
+    
     const checkboxes = document.querySelectorAll('#view-checklist input[type="checkbox"]');
     let checkedCount = 0;
 
     checkboxes.forEach(box => {
+      // Sync checkbox state from the active project's database
+      const isChecked = !!tasks[box.id];
+      box.checked = isChecked;
+
       const item = box.closest('.task-item');
-      if (box.checked) {
+      if (isChecked) {
         checkedCount++;
         item.classList.add('completed');
       } else {
@@ -409,13 +426,13 @@
     document.getElementById('progress-bar-fill').style.width = percent + '%';
     document.getElementById('progress-text').textContent = `${checkedCount} of ${total} Completed (${percent}%)`;
     document.getElementById('stepper-pct').textContent = percent + '%';
+  }
 
-    // Store state in current project
-    const p = projects[currentProjectIndex];
-    if (p) {
-      p.workflowTasks = p.workflowTasks || {};
-      checkboxes.forEach(box => p.workflowTasks[box.id] = box.checked);
-    }
+  function getProjectProgressPct(p) {
+    if (!p.workflowTasks) return 0;
+    const keys = Object.keys(p.workflowTasks);
+    const checked = keys.filter(k => p.workflowTasks[k] === true).length;
+    return Math.round((checked / 14) * 100);
   }
 
   function openNewProjectModal() {
@@ -434,6 +451,7 @@
     const val = document.getElementById('new-contract-val').value || "$0";
     const due = document.getElementById('new-due-date').value || "N/A";
 
+    // Initialize fresh empty checklist state for new project
     const newProj = {
       projectName: name,
       clientName: client,
@@ -450,14 +468,14 @@
     renderProjectsTable();
     closeNewProjectModal();
     switchTab('view-checklist');
-    showToast(`Project "${name}" Created!`);
+    showToast(`Created & Switched to "${name}"`);
   }
 
   function selectProject(index) {
     currentProjectIndex = index;
     renderProjectDetails();
     switchTab('view-checklist');
-    showToast(`Loaded "${projects[index].projectName}"`);
+    showToast(`Loaded "${projects[index].projectName}" Checklist`);
   }
 
   function renderProjectDetails() {
@@ -466,30 +484,34 @@
 
     document.getElementById('active-project-name').textContent = p.projectName;
     document.getElementById('active-project-client').textContent = `Client: ${p.clientName} | Tender & Estimating Workflow`;
+    document.getElementById('active-project-summary').textContent = p.summary || "No summary provided.";
 
-    const tasks = p.workflowTasks || {};
-    document.querySelectorAll('#view-checklist input[type="checkbox"]').forEach(box => {
-      box.checked = !!tasks[box.id];
-    });
-
-    updateWorkflowProgress();
+    updateWorkflowUI();
   }
 
   function renderProjectsTable() {
     const tbody = document.getElementById('projects-table-body');
-    tbody.innerHTML = projects.map((p, index) => `
-      <tr>
-        <td><strong>${p.projectName}</strong></td>
-        <td>${p.clientName}</td>
-        <td>${p.contractValue}</td>
-        <td>${p.dueDate}</td>
-        <td>
-          <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="selectProject(${index})">
-            Open
-          </button>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = projects.map((p, index) => {
+      const pct = getProjectProgressPct(p);
+      return `
+        <tr>
+          <td><strong>${p.projectName}</strong></td>
+          <td>${p.clientName}</td>
+          <td>${p.contractValue}</td>
+          <td>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="task-tag" style="background:#e0f2fe; color:#0369a1;">${pct}%</span>
+            </div>
+          </td>
+          <td>${p.dueDate}</td>
+          <td>
+            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="selectProject(${index})">
+              Open Checklist
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   function showToast(msg) {
@@ -500,12 +522,12 @@
   }
 
   async function saveToCloud() {
-    showToast("Saving to Cloud...");
+    showToast("Saving Project...");
     const p = projects[currentProjectIndex];
     if (!p) return;
 
     if (!GOOGLE_API_URL || GOOGLE_API_URL.includes("YOUR_GOOGLE")) {
-      setTimeout(() => showToast("Saved! (Local Cache)"), 600);
+      setTimeout(() => showToast("Saved to Local Workspace"), 500);
       return;
     }
 
@@ -518,10 +540,11 @@
       });
       showToast("Synced to Google Sheets!");
     } catch (e) {
-      showToast("Error syncing data");
+      showToast("Error syncing project data");
     }
   }
 
+  // Initial Load
   renderProjectDetails();
   renderProjectsTable();
 </script>
