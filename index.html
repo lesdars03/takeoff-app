@@ -18,7 +18,17 @@
       --canvas: #F7F5F2;
       --card-bg: #FFFFFF;
       --border: #E6E1DA;
+      --hairline: #F0EDE8;
       --ink: #1A1A18;
+      --muted: #6E6A63;
+      --faint: #8C877E;
+      --sidebar-bg: #14201C;
+      --sidebar-active: #1F332C;
+      --sidebar-text: #A3B0A9;
+      --accent-teal: #0E6E63;
+      --risk: #B4401F;
+      --positive: #2F6F3E;
+      --caution: #8A5A12;
       --font-sans: 'Geist', -apple-system, sans-serif;
       --font-serif: 'Instrument Serif', Georgia, serif;
     }
@@ -31,15 +41,6 @@
     }
 
     .font-serif-custom { font-family: var(--font-serif); }
-
-    /* Custom Transitions & Polish */
-    .card-hover {
-      transition: all 0.2s ease-in-out;
-    }
-    .card-hover:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    }
   </style>
 </head>
 <body>
@@ -74,120 +75,85 @@
   <!-- Main Content -->
   <main class="flex-1 p-8 max-w-[1440px] overflow-x-hidden">
     
-    <!-- VIEW 1: ENHANCED DASHBOARD -->
+    <!-- VIEW 1: DASHBOARD -->
     <section id="view-dashboard" class="space-y-6">
-      <header class="flex justify-between items-end pb-2 border-b border-[#E6E1DA]">
+      <header class="flex justify-between items-end">
         <div>
           <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Monday, 14 September 2026</div>
-          <h1 class="font-serif-custom text-4xl text-[#1A1A18] tracking-tight">Tender Pipeline Executive</h1>
+          <h1 class="font-serif-custom text-4xl text-[#1A1A18]">Tender pipeline</h1>
         </div>
         <div class="flex gap-2">
-          <div class="bg-[#EBE7E0] p-1 rounded-lg flex text-xs text-[#6E6A63] border border-[#E6E1DA]">
-            <button class="px-3 py-1 rounded-md">Week</button>
-            <button class="px-3 py-1 rounded-md bg-white text-[#1A1A18] font-semibold shadow-sm">Month</button>
-            <button class="px-3 py-1 rounded-md">Quarter</button>
-            <button class="px-3 py-1 rounded-md">FY</button>
+          <div class="bg-[#EBE7E0] p-1 rounded flex text-xs text-[#6E6A63]">
+            <button class="px-3 py-1 rounded">Week</button>
+            <button class="px-3 py-1 rounded bg-white text-[#1A1A18] font-bold shadow-sm">Month</button>
+            <button class="px-3 py-1 rounded">Quarter</button>
+            <button class="px-3 py-1 rounded">FY</button>
           </div>
-          <button onclick="window.print()" class="bg-white border border-[#E6E1DA] hover:bg-[#F0EDE8] px-3 py-1 rounded-lg font-medium text-xs transition">Export Report</button>
+          <button onclick="window.print()" class="bg-white border border-[#E6E1DA] px-3 py-1 rounded font-semibold text-xs">Export</button>
         </div>
       </header>
 
-      <!-- Upgraded Metric Cards Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl card-hover flex flex-col justify-between">
-          <div>
-            <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Live Pipeline Value</div>
-            <div class="font-serif-custom text-3xl my-1 text-[#1A1A18]">$116.7M</div>
-          </div>
-          <div class="text-xs text-[#6E6A63] flex items-center justify-between pt-2 border-t border-[#F0EDE8]">
-            <span>12 Tenders Active</span>
-            <span class="text-[#2F6F3E] font-semibold bg-[#EAF2EB] px-1.5 py-0.5 rounded">+4.5%</span>
-          </div>
+      <!-- KPI Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
+          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Live Pipeline Value</div>
+          <div class="font-serif-custom text-2xl my-1">$116.7M <span class="text-xs font-sans text-[#2F6F3E] font-bold">+4.5%</span></div>
+          <div class="text-xs text-[#6E6A63]">12 tenders in progress</div>
         </div>
-
-        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl card-hover flex flex-col justify-between">
-          <div>
-            <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Win Rate (12mo)</div>
-            <div class="font-serif-custom text-3xl my-1 text-[#1A1A18]">38%</div>
-          </div>
-          <div class="text-xs text-[#6E6A63] flex items-center justify-between pt-2 border-t border-[#F0EDE8]">
-            <span>19 Won / 50 Bid</span>
-            <span class="text-[#2F6F3E] font-semibold bg-[#EAF2EB] px-1.5 py-0.5 rounded">+3 pts</span>
-          </div>
+        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
+          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Win Rate (12mo)</div>
+          <div class="font-serif-custom text-2xl my-1">38% <span class="text-xs font-sans text-[#2F6F3E] font-bold">+3 pts</span></div>
+          <div class="text-xs text-[#6E6A63]">19 won of 50 submitted</div>
         </div>
-
-        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl card-hover flex flex-col justify-between">
-          <div>
-            <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Avg Margin Bid</div>
-            <div class="font-serif-custom text-3xl my-1 text-[#1A1A18]">8.4%</div>
-          </div>
-          <div class="text-xs text-[#6E6A63] flex items-center justify-between pt-2 border-t border-[#F0EDE8]">
-            <span>Target: 9.0%</span>
-            <span class="text-[#B4401F] font-semibold bg-[#FDF2F0] px-1.5 py-0.5 rounded">−0.6 pts</span>
-          </div>
+        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
+          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Avg Margin Bid</div>
+          <div class="font-serif-custom text-2xl my-1">8.4% <span class="text-xs font-sans text-[#B4401F] font-bold">−0.6 pts</span></div>
+          <div class="text-xs text-[#6E6A63]">Target 9.0%</div>
         </div>
-
-        <div class="bg-white p-4 border border-[#E6E1DA] border-l-4 border-l-[#B4401F] rounded-xl card-hover flex flex-col justify-between">
-          <div>
-            <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#B4401F]">Closing in 7 Days</div>
-            <div class="font-serif-custom text-3xl my-1 text-[#1A1A18]">3 <span class="text-lg font-sans text-[#6E6A63]">/ $19.3M</span></div>
-          </div>
-          <div class="text-xs text-[#B4401F] font-medium pt-2 border-t border-[#F0EDE8] flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#B4401F] animate-pulse"></span> 1 below 50% target
-          </div>
+        <div class="bg-white p-4 border border-[#E6E1DA] border-l-4 border-l-[#B4401F] rounded-xl">
+          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Closing in 7 Days</div>
+          <div class="font-serif-custom text-2xl my-1">3 / $19.3M</div>
+          <div class="text-xs text-[#B4401F] font-medium">1 still below 50% complete</div>
         </div>
-
-        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl card-hover flex flex-col justify-between">
-          <div>
-            <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Takeoff Scope Items</div>
-            <div class="font-serif-custom text-3xl my-1 text-[#1A1A18]">2,043</div>
-          </div>
-          <div class="text-xs text-[#6E6A63] pt-2 border-t border-[#F0EDE8]">
-            Active across 4 Estimators
-          </div>
+        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
+          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Takeoff Items Open</div>
+          <div class="font-serif-custom text-2xl my-1">2,043</div>
+          <div class="text-xs text-[#6E6A63]">Across 4 estimators</div>
         </div>
       </div>
 
-      <!-- Improved Table Card Container -->
-      <div class="bg-white border border-[#E6E1DA] rounded-xl shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-[#E6E1DA] flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-[#FCFBF9]">
-          <div>
-            <h3 class="font-semibold text-sm text-[#1A1A18]">Live Tender Submissions</h3>
-            <p class="text-xs text-[#6E6A63]">Real-time status tracking for active estimating bids.</p>
-          </div>
-          <div class="flex items-center gap-3">
-            <label class="text-xs text-[#1A1A18] font-medium flex items-center gap-2 cursor-pointer bg-white px-3 py-1.5 rounded-lg border border-[#E6E1DA]">
-              <input type="checkbox" id="risk-toggle" onchange="renderDashboardTable()" class="accent-[#0E6E63]" /> 
-              At Risk Only (&lt;80% complete)
-            </label>
-          </div>
+      <!-- Live Tenders Table -->
+      <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-xs font-semibold uppercase tracking-wider">Live Tenders</span>
+          <label class="text-xs text-[#6E6A63] flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="risk-toggle" onchange="renderDashboardTable()" /> At risk only
+          </label>
         </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="border-b border-[#E6E1DA] text-[10px] text-[#8C877E] uppercase bg-[#FAF8F5]">
-                <th class="py-3 px-4 font-semibold">Project & Client</th>
-                <th class="py-3 px-4 font-semibold">Estimator</th>
-                <th class="py-3 px-4 font-semibold">Value</th>
-                <th class="py-3 px-4 font-semibold">Margin</th>
-                <th class="py-3 px-4 font-semibold">Closing Date</th>
-                <th class="py-3 px-4 font-semibold">Completion Progress</th>
-                <th class="py-3 px-4 font-semibold">Stage</th>
-              </tr>
-            </thead>
-            <tbody id="dashboard-table-body" class="divide-y divide-[#F0EDE8]"></tbody>
-          </table>
-        </div>
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-[#E6E1DA] text-[10px] text-[#8C877E] uppercase">
+              <th class="py-2">Project</th>
+              <th class="py-2">Value</th>
+              <th class="py-2">Margin</th>
+              <th class="py-2">Closes</th>
+              <th class="py-2">Status</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-table-body"></tbody>
+        </table>
       </div>
     </section>
 
-    <!-- OTHER VIEWS (Checklist, Active, Completed, Takeoffs, Pricing) -->
+    <!-- VIEW 2: WORKFLOW CHECKLIST -->
     <section id="view-checklist" class="hidden space-y-4">
       <h1 class="font-serif-custom text-3xl">Workflow Checklist</h1>
-      <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl space-y-3" id="checklist-container"></div>
+      <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl space-y-3" id="checklist-container">
+        <!-- Dynamic Checklist Items Load Here -->
+      </div>
     </section>
 
+    <!-- VIEW 3: ACTIVE PROJECTS -->
     <section id="view-active" class="hidden space-y-4">
       <h1 class="font-serif-custom text-3xl">Active Tender Projects</h1>
       <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl overflow-x-auto">
@@ -206,6 +172,7 @@
       </div>
     </section>
 
+    <!-- VIEW 4: COMPLETED PROJECTS -->
     <section id="view-completed" class="hidden space-y-4">
       <h1 class="font-serif-custom text-3xl">Completed / Submitted Tenders</h1>
       <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl text-xs text-[#6E6A63]">
@@ -213,6 +180,7 @@
       </div>
     </section>
 
+    <!-- VIEW 5: TAKEOFFS -->
     <section id="view-takeoffs" class="hidden space-y-4">
       <h1 class="font-serif-custom text-3xl">Takeoffs & Fixtures</h1>
       <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl overflow-x-auto">
@@ -230,6 +198,7 @@
       </div>
     </section>
 
+    <!-- VIEW 6: PRICING -->
     <section id="view-pricing" class="hidden space-y-4">
       <h1 class="font-serif-custom text-3xl">Pricing Schedules & Margin Rules</h1>
       <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl text-xs space-y-2">
@@ -241,31 +210,34 @@
   </main>
 </div>
 
-<!-- JAVASCRIPT -->
+<!-- APPLICATION JAVASCRIPT -->
 <script>
+  // Google Apps Script Web App URL
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzl61bAq7IsFCL8vqT4M5sUNoY95SLhsZcJJFEYy6YdsCKOmnXTS62CIptb4S4bihaCpQ/exec';
 
   let projectsData = [];
 
+  // Initialize Application Data
   async function loadInitialData() {
     try {
+      // First attempt to pull data from your Google Apps Script endpoint
       const resGScript = await fetch(APPS_SCRIPT_URL);
       const scriptData = await resGScript.json();
       if (Array.isArray(scriptData) && scriptData.length > 0) {
         projectsData = scriptData;
       } else {
-        throw new Error('Fallback required');
+        throw new Error('Using Express API or fallback');
       }
     } catch (e) {
       try {
         const resProj = await fetch('/api/projects');
         projectsData = await resProj.json();
       } catch (e2) {
+        // Local Fallback Data
         projectsData = [
           { id: 1, name: "Harbour Bridge Retail Fitout", client: "Lendlease", val: 2.1, margin: 11.4, estimator: "J. Nguyen", items: 58, closeDate: "2026-09-16", stage: "Review", pct: 94, trade: "Finishes" },
           { id: 2, name: "Riverside Apartments", client: "Multiplex", val: 12.4, margin: 8.2, estimator: "J. Nguyen", items: 214, closeDate: "2026-09-18", stage: "Pricing", pct: 82, trade: "Structure" },
-          { id: 3, name: "Commercial Warehouse — Unit 4", client: "BuildCorp", val: 4.8, margin: 6.1, estimator: "S. Patel", items: 96, closeDate: "2026-09-20", stage: "Takeoff", pct: 31, trade: "Earthworks" },
-          { id: 4, name: "Southbank Tower Stage 2", client: "Probuild", val: 28.6, margin: 7.0, estimator: "M. Okafor", items: 402, closeDate: "2026-09-23", stage: "Pricing", pct: 64, trade: "Structure" }
+          { id: 3, name: "Commercial Warehouse — Unit 4", client: "BuildCorp", val: 4.8, margin: 6.1, estimator: "S. Patel", items: 96, closeDate: "2026-09-20", stage: "Takeoff", pct: 31, trade: "Earthworks" }
         ];
       }
     }
@@ -275,6 +247,7 @@
     loadTakeoffs();
   }
 
+  // Tab Switcher Logic
   function switchTab(tab) {
     ['dashboard', 'checklist', 'active', 'completed', 'takeoffs', 'pricing'].forEach(v => {
       document.getElementById(`view-${v}`).classList.add('hidden');
@@ -286,48 +259,24 @@
     if(activeBtn) activeBtn.className = "w-full text-left px-3 py-2 rounded-md text-xs font-medium text-white bg-[#1F332C]";
   }
 
-  // Enhanced Dashboard Table Renderer
+  // Render Dashboard Table
   function renderDashboardTable() {
     const filterRisk = document.getElementById('risk-toggle').checked;
     const body = document.getElementById('dashboard-table-body');
-    
-    const filtered = projectsData.filter(p => filterRisk ? (p.pct < 80 && p.stage !== 'Submitted') : true);
-
-    body.innerHTML = filtered.map(p => {
-      // Stage badge styles
-      let badgeStyle = "bg-[#EFECE6] text-[#1A1A18]";
-      if (p.stage === 'Submitted') badgeStyle = "bg-[#EAF2EB] text-[#2F6F3E]";
-      if (p.stage === 'Review') badgeStyle = "bg-[#EBF3F5] text-[#0E6E63]";
-      
-      // Margin highlight
-      const marginClass = p.margin < 7.0 ? 'text-[#B4401F] font-bold' : 'text-[#1A1A18] font-medium';
-
-      return `
-        <tr class="hover:bg-[#FCFBF9] transition">
-          <td class="py-3 px-4">
-            <div class="font-semibold text-[#1A1A18] text-xs">${p.name}</div>
-            <div class="text-[10.5px] text-[#6E6A63]">${p.client}</div>
-          </td>
-          <td class="py-3 px-4 text-[#6E6A63]">${p.estimator}</td>
-          <td class="py-3 px-4 font-semibold text-[#1A1A18]">$${p.val}M</td>
-          <td class="py-3 px-4 ${marginClass}">${p.margin}%</td>
-          <td class="py-3 px-4 text-[#6E6A63]">${p.closeDate}</td>
-          <td class="py-3 px-4 w-36">
-            <div class="flex items-center gap-2">
-              <div class="w-full bg-[#EFECE6] h-1.5 rounded-full overflow-hidden">
-                <div class="h-full ${p.pct < 50 ? 'bg-[#B4401F]' : 'bg-[#0E6E63]'}" style="width: ${p.pct}%"></div>
-              </div>
-              <span class="text-[10px] font-semibold text-[#6E6A63]">${p.pct}%</span>
-            </div>
-          </td>
-          <td class="py-3 px-4">
-            <span class="px-2 py-1 rounded-md text-[10px] font-semibold ${badgeStyle}">${p.stage}</span>
-          </td>
+    body.innerHTML = projectsData
+      .filter(p => filterRisk ? (p.pct < 80 && p.stage !== 'Submitted') : true)
+      .map(p => `
+        <tr class="border-b border-[#F0EDE8]">
+          <td class="py-3 font-semibold">${p.name}<div class="text-[10px] font-normal text-[#6E6A63]">${p.client} · ${p.estimator}</div></td>
+          <td class="py-3 font-bold">$${p.val}M</td>
+          <td class="py-3 ${p.margin < 7 ? 'text-[#B4401F] font-bold' : ''}">${p.margin}%</td>
+          <td class="py-3">${p.closeDate}</td>
+          <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${p.stage === 'Submitted' ? 'bg-[#EAF2EB] text-[#2F6F3E]' : 'bg-[#EFECE6]'}">${p.stage} (${p.pct}%)</span></td>
         </tr>
-      `;
-    }).join('');
+      `).join('');
   }
 
+  // Render Active Projects
   function renderActiveProjects() {
     const body = document.getElementById('active-projects-body');
     body.innerHTML = projectsData.map(p => `
@@ -341,11 +290,18 @@
     `).join('');
   }
 
+  // Load Workflow Checklist
   async function loadChecklist() {
-    let items = [
-      { id: 101, task: "Verify Subcontractor Quotes for Concrete Works", done: true, assignee: "J. Nguyen" },
-      { id: 102, task: "Confirm Site Access Constraints & Crane Hire Setup", done: false, assignee: "J. Nguyen" }
-    ];
+    let items = [];
+    try {
+      const res = await fetch('/api/checklists');
+      items = await res.json();
+    } catch (e) {
+      items = [
+        { id: 101, task: "Verify Subcontractor Quotes for Concrete Works", done: true, assignee: "J. Nguyen" },
+        { id: 102, task: "Confirm Site Access Constraints & Crane Hire Setup", done: false, assignee: "J. Nguyen" }
+      ];
+    }
     const container = document.getElementById('checklist-container');
     container.innerHTML = items.map(c => `
       <div class="flex items-center justify-between p-2 border-b border-[#F0EDE8]">
@@ -358,11 +314,18 @@
     `).join('');
   }
 
+  // Load Takeoff Items
   async function loadTakeoffs() {
-    let items = [
-      { item: "Reinforced Concrete Core Slab", quantity: 1450, unit: "m3", rate: 420 },
-      { item: "Structural Steel Framing (Grade 350)", quantity: 310, unit: "tonnes", rate: 3800 }
-    ];
+    let items = [];
+    try {
+      const res = await fetch('/api/takeoffs');
+      items = await res.json();
+    } catch (e) {
+      items = [
+        { item: "Reinforced Concrete Core Slab", quantity: 1450, unit: "m3", rate: 420 },
+        { item: "Structural Steel Framing (Grade 350)", quantity: 310, unit: "tonnes", rate: 3800 }
+      ];
+    }
     const body = document.getElementById('takeoffs-body');
     body.innerHTML = items.map(t => `
       <tr class="border-b border-[#F0EDE8]">
@@ -374,6 +337,7 @@
     `).join('');
   }
 
+  // Run initial fetch on page load
   window.onload = loadInitialData;
 </script>
 </body>
