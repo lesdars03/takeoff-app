@@ -2,343 +2,866 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Australian Estimator Copilot</title>
-  
-  <!-- Fonts: Instrument Serif & Geist -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     :root {
-      --canvas: #F7F5F2;
-      --card-bg: #FFFFFF;
-      --border: #E6E1DA;
-      --hairline: #F0EDE8;
-      --ink: #1A1A18;
-      --muted: #6E6A63;
-      --faint: #8C877E;
-      --sidebar-bg: #14201C;
-      --sidebar-active: #1F332C;
-      --sidebar-text: #A3B0A9;
-      --accent-teal: #0E6E63;
-      --risk: #B4401F;
-      --positive: #2F6F3E;
-      --caution: #8A5A12;
-      --font-sans: 'Geist', -apple-system, sans-serif;
-      --font-serif: 'Instrument Serif', Georgia, serif;
+      --bg-app: #f3f4f6;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --border-color: #e5e7eb;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --accent-blue: #2563eb;
+      --accent-navy: #1e293b;
+      --status-green-bg: #dcfce7;
+      --status-green-text: #15803d;
+      --status-amber-bg: #fef3c7;
+      --status-amber-text: #b45309;
+      --status-gray-bg: #f3f4f6;
+      --status-gray-text: #6b7280;
     }
 
-    body {
-      background-color: var(--canvas);
-      color: var(--ink);
-      font-family: var(--font-sans);
-      font-size: 13px;
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-app); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+    .layout-container { display: flex; height: 100vh; }
+
+    /* Left Sidebar */
+    aside {
+      width: 250px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color);
+      display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem 1rem; flex-shrink: 0;
+    }
+    .brand { display: flex; align-items: center; gap: 0.75rem; font-weight: 700; font-size: 0.95rem; color: var(--accent-blue); padding-bottom: 1.5rem; }
+    .brand-logo { background: var(--accent-blue); color: #fff; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+    
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; }
+    .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.875rem; color: var(--text-muted); cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
+    .nav-item:hover, .nav-item.active { background: #f0fdf4; color: var(--accent-blue); font-weight: 600; }
+    
+    .sidebar-footer { border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+
+    /* Main Area */
+    main { flex: 1; overflow-y: auto; padding: 2rem 2.5rem; }
+
+    /* Header */
+    .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .project-title-area h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
+    .project-title-area p { color: var(--text-muted); font-size: 0.875rem; }
+    
+    .header-actions { display: flex; gap: 0.75rem; }
+    .btn { background: var(--accent-navy); color: #fff; border: none; padding: 0.55rem 1.1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.9; }
+    .btn-secondary { background: #fff; color: var(--text-main); border: 1px solid var(--border-color); }
+    .btn-blue { background: var(--accent-blue); color: #fff; }
+    .btn-success { background: #16a34a; color: #fff; }
+
+    /* Workflow Stepper */
+    .stepper-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .step-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; cursor: pointer; flex: 1; }
+    .step-item.active { color: var(--accent-blue); font-weight: 700; }
+    .step-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; background: #fff; }
+    .step-item.active .step-circle { border-color: var(--accent-blue); background: var(--accent-blue); color: #fff; }
+    .step-line { height: 2px; background: var(--border-color); flex: 1; margin: 0 -15px; transform: translateY(-10px); }
+
+    /* View Switcher */
+    .view-pane { display: none; }
+    .view-pane.active { display: block; }
+
+    /* Content Cards */
+    .content-grid { display: flex; flex-direction: column; gap: 1.5rem; max-width: 1000px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
+    .card-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* Metric Cards Grid */
+    .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .metric-card { background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; }
+    .metric-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .metric-value { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-top: 0.25rem; }
+
+    /* Checklist Section */
+    .workflow-group { margin-bottom: 1.5rem; }
+    .workflow-group-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.75rem; letter-spacing: 0.05em; display: flex; justify-content: space-between; }
+    .checklist-container { display: flex; flex-direction: column; gap: 0.5rem; }
+    .task-item { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.85rem; background: #f9fafb; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; transition: background 0.2s; }
+    .task-item:hover { background: #f3f4f6; }
+    .task-label { display: flex; align-items: center; gap: 0.75rem; font-weight: 500; cursor: pointer; flex: 1; }
+    .task-item.completed { background: #f0fdf4; border-color: #bbf7d0; opacity: 0.8; }
+    .task-item.completed .task-text { text-decoration: line-through; color: var(--text-muted); }
+    .task-tag { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; background: #e2e8f0; color: #475569; }
+
+    /* Badges */
+    .status-badge { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 20px; text-transform: capitalize; }
+    .status-active { background: var(--status-amber-bg); color: var(--status-amber-text); }
+    .status-completed { background: var(--status-green-bg); color: var(--status-green-text); }
+
+    /* Progress bar */
+    .progress-bar-container { background: #e5e7eb; border-radius: 8px; height: 10px; width: 100%; overflow: hidden; margin-top: 0.5rem; }
+    .progress-bar-fill { background: var(--accent-blue); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+    /* Data Tables */
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .data-table th, .data-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
+    .data-table th { background: #f9fafb; font-weight: 600; color: var(--text-muted); }
+
+    /* Form Styles & Inputs */
+    .takeoff-form-grid { display: grid; grid-template-columns: 1fr 2fr 1fr 1fr 1fr auto; gap: 0.75rem; align-items: end; margin-top: 1rem; background: #f9fafb; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.875rem; outline: none; background: #fff;
     }
 
-    .font-serif-custom { font-family: var(--font-serif); }
+    /* Code Tag Design */
+    .code-badge { background: #1e293b; color: #38bdf8; font-family: monospace; font-weight: 700; font-size: 0.8rem; padding: 0.2rem 0.5rem; border-radius: 4px; }
+
+    /* Modal Form Styles */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: #fff; border-radius: 12px; width: 520px; max-width: 90%; padding: 1.75rem; }
+
+    input[type="checkbox"] { accent-color: var(--accent-blue); width: 18px; height: 18px; cursor: pointer; }
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--accent-navy); color: #fff; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 200; }
   </style>
 </head>
 <body>
 
-<div class="flex min-h-screen">
-  <!-- Sidebar -->
-  <aside class="w-[228px] bg-[#14201C] flex flex-col justify-between shrink-0 sticky top-0 h-screen text-[#A3B0A9]">
+<div class="layout-container">
+  <!-- Navigation Sidebar -->
+  <aside>
     <div>
-      <div class="p-5 border-b border-white/10 flex items-center gap-2 text-white font-semibold text-xs tracking-wide">
-        <span class="w-2 h-2 rounded-full bg-[#0E6E63]"></span>
-        Australian Estimator Copilot
+      <div class="brand">
+        <div class="brand-logo"><i class="fa-solid fa-compass"></i></div>
+        <span>Australian Estimator Copilot</span>
       </div>
-      <nav class="p-2 space-y-1">
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full text-left px-3 py-2 rounded-md text-xs font-medium text-white bg-[#1F332C]">Dashboard</button>
-        <button onclick="switchTab('checklist')" id="nav-checklist" class="w-full text-left px-3 py-2 rounded-md text-xs font-medium hover:bg-white/5 hover:text-white transition">Workflow Checklist</button>
-        <button onclick="switchTab('active')" id="nav-active" class="w-full text-left px-3 py-2 rounded-md text-xs font-medium hover:bg-white/5 hover:text-white transition">Active Projects</button>
-        <button onclick="switchTab('completed')" id="nav-completed" class="w-full text-left px-3 py-2 rounded-md text-xs font-medium hover:bg-white/5 hover:text-white transition">Completed Projects</button>
-        <button onclick="switchTab('takeoffs')" id="nav-takeoffs" class="w-full text-left px-3 py-2 rounded-md text-xs font-medium hover:bg-white/5 hover:text-white transition">Takeoffs & Fixtures</button>
-        <button onclick="switchTab('pricing')" id="nav-pricing" class="w-full text-left px-3 py-2 rounded-md text-xs font-medium hover:bg-white/5 hover:text-white transition">Pricing</button>
-      </nav>
+      <ul class="nav-list">
+        <li class="nav-item active" onclick="switchNav(this, 'view-dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-checklist')"><i class="fa-solid fa-list-check"></i> Workflow Checklist</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-projects')"><i class="fa-solid fa-folder"></i> Active Projects</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-done')"><i class="fa-solid fa-circle-check"></i> Completed Projects</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-takeoff')"><i class="fa-solid fa-ruler-combined"></i> Takeoffs & Fixtures</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-pricing')"><i class="fa-solid fa-tags"></i> Pricing</li>
+      </ul>
     </div>
 
-    <div class="p-4 border-t border-white/10 flex items-center gap-3">
-      <div class="w-7 h-7 rounded-full bg-[#2A3B34] text-white flex items-center justify-center font-semibold text-xs">MD</div>
-      <div class="flex flex-col text-xs">
-        <span class="text-white font-medium">Managing Director</span>
-        <span class="text-[10.5px] text-[#A3B0A9]">Executive View</span>
-      </div>
+    <div class="sidebar-footer">
+      <div class="nav-item"><i class="fa-solid fa-gear"></i> Settings</div>
+      <div class="nav-item"><i class="fa-solid fa-circle-question"></i> Help & Support</div>
     </div>
   </aside>
 
-  <!-- Main Content -->
-  <main class="flex-1 p-8 max-w-[1440px] overflow-x-hidden">
-    
-    <!-- VIEW 1: DASHBOARD -->
-    <section id="view-dashboard" class="space-y-6">
-      <header class="flex justify-between items-end">
-        <div>
-          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Monday, 14 September 2026</div>
-          <h1 class="font-serif-custom text-4xl text-[#1A1A18]">Tender pipeline</h1>
-        </div>
-        <div class="flex gap-2">
-          <div class="bg-[#EBE7E0] p-1 rounded flex text-xs text-[#6E6A63]">
-            <button class="px-3 py-1 rounded">Week</button>
-            <button class="px-3 py-1 rounded bg-white text-[#1A1A18] font-bold shadow-sm">Month</button>
-            <button class="px-3 py-1 rounded">Quarter</button>
-            <button class="px-3 py-1 rounded">FY</button>
-          </div>
-          <button onclick="window.print()" class="bg-white border border-[#E6E1DA] px-3 py-1 rounded font-semibold text-xs">Export</button>
-        </div>
-      </header>
+  <!-- Main Workspace -->
+  <main>
+    <div class="header-bar">
+      <div class="project-title-area">
+        <h1 id="header-title">Executive Dashboard</h1>
+        <p id="header-subtitle">Overview of all active and completed tender estimates</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-blue" onclick="openNewProjectModal()"><i class="fa-solid fa-plus"></i> New Project</button>
+        <button class="btn btn-secondary" onclick="saveToCloud()"><i class="fa-solid fa-cloud"></i> Save Project</button>
+      </div>
+    </div>
 
-      <!-- KPI Summary Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
-          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Live Pipeline Value</div>
-          <div class="font-serif-custom text-2xl my-1">$116.7M <span class="text-xs font-sans text-[#2F6F3E] font-bold">+4.5%</span></div>
-          <div class="text-xs text-[#6E6A63]">12 tenders in progress</div>
+    <!-- Stepper Pipeline -->
+    <div class="stepper-card">
+      <div class="step-item active" onclick="switchTab('view-checklist')">
+        <div class="step-circle" id="stepper-pct">0%</div>Checklist
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" onclick="switchTab('view-takeoff')"><div class="step-circle"><i class="fa-solid fa-ruler"></i></div>Takeoff Items</div>
+      <div class="step-line"></div>
+      <div class="step-item" onclick="switchTab('view-dashboard')"><div class="step-circle"><i class="fa-solid fa-chart-line"></i></div>Dashboard</div>
+      <div class="step-line"></div>
+      <div class="step-item" onclick="switchTab('view-pricing')"><div class="step-circle"><i class="fa-solid fa-dollar-sign"></i></div>Pricing</div>
+    </div>
+
+    <!-- VIEW: DASHBOARD -->
+    <div id="view-dashboard" class="view-pane active">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Active Projects</div>
+          <div class="metric-value" id="metric-active-count">0</div>
         </div>
-        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
-          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Win Rate (12mo)</div>
-          <div class="font-serif-custom text-2xl my-1">38% <span class="text-xs font-sans text-[#2F6F3E] font-bold">+3 pts</span></div>
-          <div class="text-xs text-[#6E6A63]">19 won of 50 submitted</div>
+        <div class="metric-card">
+          <div class="metric-title">Completed Projects</div>
+          <div class="metric-value" id="metric-done-count">0</div>
         </div>
-        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
-          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Avg Margin Bid</div>
-          <div class="font-serif-custom text-2xl my-1">8.4% <span class="text-xs font-sans text-[#B4401F] font-bold">−0.6 pts</span></div>
-          <div class="text-xs text-[#6E6A63]">Target 9.0%</div>
-        </div>
-        <div class="bg-white p-4 border border-[#E6E1DA] border-l-4 border-l-[#B4401F] rounded-xl">
-          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Closing in 7 Days</div>
-          <div class="font-serif-custom text-2xl my-1">3 / $19.3M</div>
-          <div class="text-xs text-[#B4401F] font-medium">1 still below 50% complete</div>
-        </div>
-        <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
-          <div class="text-[10.5px] font-semibold uppercase tracking-wider text-[#6E6A63]">Takeoff Items Open</div>
-          <div class="font-serif-custom text-2xl my-1">2,043</div>
-          <div class="text-xs text-[#6E6A63]">Across 4 estimators</div>
+        <div class="metric-card">
+          <div class="metric-title">Current Selected Project</div>
+          <div class="metric-value" id="metric-current-name" style="font-size: 1.1rem;">-</div>
         </div>
       </div>
 
-      <!-- Live Tenders Table -->
-      <div class="bg-white p-4 border border-[#E6E1DA] rounded-xl">
-        <div class="flex justify-between items-center mb-4">
-          <span class="text-xs font-semibold uppercase tracking-wider">Live Tenders</span>
-          <label class="text-xs text-[#6E6A63] flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" id="risk-toggle" onchange="renderDashboardTable()" /> At risk only
-          </label>
+      <div class="card">
+        <div class="card-title">
+          <span>Project Status Dashboard</span>
         </div>
-        <table class="w-full text-left text-xs border-collapse">
+        <table class="data-table">
           <thead>
-            <tr class="border-b border-[#E6E1DA] text-[10px] text-[#8C877E] uppercase">
-              <th class="py-2">Project</th>
-              <th class="py-2">Value</th>
-              <th class="py-2">Margin</th>
-              <th class="py-2">Closes</th>
-              <th class="py-2">Status</th>
+            <tr>
+              <th>Project Name</th>
+              <th>Client Name</th>
+              <th>Progress</th>
+              <th>Status</th>
+              <th>Due Date</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="dashboard-table-body"></tbody>
         </table>
       </div>
-    </section>
+    </div>
 
-    <!-- VIEW 2: WORKFLOW CHECKLIST -->
-    <section id="view-checklist" class="hidden space-y-4">
-      <h1 class="font-serif-custom text-3xl">Workflow Checklist</h1>
-      <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl space-y-3" id="checklist-container">
-        <!-- Dynamic Checklist Items Load Here -->
+    <!-- VIEW: WORKFLOW CHECKLIST -->
+    <div id="view-checklist" class="view-pane">
+      <div class="card">
+        <div class="card-title">
+          <span>Project Workflow Checklist</span>
+          <span id="progress-text" style="font-size: 0.85rem; color: var(--accent-blue);">0 of 14 Completed (0%)</span>
+        </div>
+        <p class="card-desc">Complete each stage of the tender to take-off process for this project.</p>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
       </div>
-    </section>
 
-    <!-- VIEW 3: ACTIVE PROJECTS -->
-    <section id="view-active" class="hidden space-y-4">
-      <h1 class="font-serif-custom text-3xl">Active Tender Projects</h1>
-      <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl overflow-x-auto">
-        <table class="w-full text-left text-xs">
+      <div class="content-grid">
+        <!-- Stage 1 -->
+        <div class="workflow-group">
+          <div class="workflow-group-title">Stage 1: Tender Intake & Setup</div>
+          <div class="checklist-container">
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf1" onchange="toggleTask(this)"><span class="task-text">Receive tender package (Outlook / Estimate One)</span></label><span class="task-tag">Tender Intake</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf2" onchange="toggleTask(this)"><span class="task-text">Check Tender Documents (Elec, Specs, Lighting, FFE, Arch drawings)</span></label><span class="task-tag">Doc Audit</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf3" onchange="toggleTask(this)"><span class="task-text">Folder Setup (01 Tender, 02 Subbie Quotes, 03 Docs, 04 Corro, 05 Working)</span></label><span class="task-tag">Folder Setup</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf4" onchange="toggleTask(this)"><span class="task-text">Save all tender files in 03 Documentations folder</span></label><span class="task-tag">Filing</span></div>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="workflow-group">
+          <div class="workflow-group-title">Stage 2: Review & Systems Identification</div>
+          <div class="checklist-container">
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf5" onchange="toggleTask(this)"><span class="task-text">Project Identification (New vs Existing / Residential / Commercial)</span></label><span class="task-tag">Scope Audit</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf6" onchange="toggleTask(this)"><span class="task-text">Drawing Review (Thorough layout review, notes, legends & specs)</span></label><span class="task-tag">Drawings</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf7" onchange="toggleTask(this)"><span class="task-text">System Identification (Lighting, DALI, MSB, DB, Comms, Security, Fire)</span></label><span class="task-tag">Systems</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf8" onchange="toggleTask(this)"><span class="task-text">RFQ Preparation (Switchboards, DALI, Emergency, Security, Fire)</span></label><span class="task-tag">Quotes & RFQs</span></div>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="workflow-group">
+          <div class="workflow-group-title">Stage 3: Ground Plan & Take-Off Execution</div>
+          <div class="checklist-container">
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf9" onchange="toggleTask(this)"><span class="task-text">Ground Plan Setup (Scale drawings & recheck Door 0.92m)</span></label><span class="task-tag">Plan Scaling</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf10" onchange="toggleTask(this)"><span class="task-text">Take-Off Sequence (Lighting -> Power -> Comms -> Trays -> Submains -> Systems)</span></label><span class="task-tag">Takeoff Exec</span></div>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="workflow-group">
+          <div class="workflow-group-title">Stage 4: Post Take-Off Validation & BOQ</div>
+          <div class="checklist-container">
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf11" onchange="toggleTask(this)"><span class="task-text">Post Take-Off Checks (Cross-check Specs, Legends & FFE schedule)</span></label><span class="task-tag">QA Review</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf12" onchange="toggleTask(this)"><span class="task-text">Quantity Validation (Track lights & LED Strips verified and LOCKED)</span></label><span class="task-tag">Validation</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf13" onchange="toggleTask(this)"><span class="task-text">Data Export (Export formatted CSV -> Excel .xlsx)</span></label><span class="task-tag">Data Export</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf14" onchange="toggleTask(this)"><span class="task-text">Final BOQ Preparation (Organise by system with Brands & BOM)</span></label><span class="task-tag">Final BOQ</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW: TAKEOFF & FIXTURES -->
+    <div id="view-takeoff" class="view-pane">
+      <div class="card">
+        <div class="card-title">
+          <span>Takeoff Fixtures & Materials List</span>
+          <span style="font-size:0.85rem; color:var(--text-muted);" id="takeoff-summary-count">0 items recorded</span>
+        </div>
+        <form id="add-takeoff-form" onsubmit="handleAddTakeoffItem(event)" class="takeoff-form-grid">
+          <div class="form-group"><label>Code / Tag</label><input type="text" id="tf-code" placeholder="e.g. A1, HB-1" style="font-family: monospace; font-weight:700;" required /></div>
+          <div class="form-group"><label>Fixture / Material Description</label><input type="text" id="tf-desc" placeholder="e.g. Type A1 LED Downlight (7W IP44)" required /></div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="tf-cat">
+              <option value="Lighting">Lighting</option>
+              <option value="Power">Power & Outlets</option>
+              <option value="Comms/Data">Comms / Data</option>
+              <option value="Cable / Tray">Cable / Tray</option>
+              <option value="Switchboards">Switchboards</option>
+              <option value="Fire/Security">Fire & Security</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Quantity</label><input type="number" id="tf-qty" min="1" placeholder="10" required /></div>
+          <div class="form-group">
+            <label>Unit</label>
+            <select id="tf-unit">
+              <option value="ea">ea (Each)</option>
+              <option value="m">m (Meters)</option>
+              <option value="set">set</option>
+              <option value="lot">lot</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-blue"><i class="fa-solid fa-plus"></i> Add Item</button>
+        </form>
+
+        <table class="data-table">
           <thead>
-            <tr class="border-b text-[10px] text-[#8C877E] uppercase">
-              <th class="py-2">Project Name</th>
-              <th class="py-2">Client</th>
-              <th class="py-2">Estimator</th>
-              <th class="py-2">Trade</th>
-              <th class="py-2">Value</th>
+            <tr>
+              <th style="width:100px;">Code</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Quantity</th>
+              <th>Unit</th>
+              <th style="width:80px;">Action</th>
             </tr>
           </thead>
-          <tbody id="active-projects-body"></tbody>
+          <tbody id="takeoff-table-body"></tbody>
         </table>
       </div>
-    </section>
+    </div>
 
-    <!-- VIEW 4: COMPLETED PROJECTS -->
-    <section id="view-completed" class="hidden space-y-4">
-      <h1 class="font-serif-custom text-3xl">Completed / Submitted Tenders</h1>
-      <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl text-xs text-[#6E6A63]">
-        Showing 19 won tenders out of 50 total submitted over the last 12-month period.
-      </div>
-    </section>
-
-    <!-- VIEW 5: TAKEOFFS -->
-    <section id="view-takeoffs" class="hidden space-y-4">
-      <h1 class="font-serif-custom text-3xl">Takeoffs & Fixtures</h1>
-      <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl overflow-x-auto">
-        <table class="w-full text-left text-xs">
+    <!-- VIEW: ACTIVE PROJECTS -->
+    <div id="view-projects" class="view-pane">
+      <div class="card">
+        <div class="card-title">
+          <span>Active Projects Directory</span>
+          <button class="btn btn-blue" onclick="openNewProjectModal()"><i class="fa-solid fa-plus"></i> New Project</button>
+        </div>
+        <table class="data-table">
           <thead>
-            <tr class="border-b text-[10px] text-[#8C877E] uppercase">
-              <th class="py-2">Takeoff Item</th>
-              <th class="py-2">Quantity</th>
-              <th class="py-2">Unit Rate</th>
-              <th class="py-2">Subtotal</th>
+            <tr><th>Project Name</th><th>Client Name</th><th>Est. Value</th><th>Progress</th><th>Due Date</th><th>Action</th></tr>
+          </thead>
+          <tbody id="projects-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW: COMPLETED PROJECTS -->
+    <div id="view-done" class="view-pane">
+      <div class="card">
+        <div class="card-title">
+          <span>Completed Projects</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Project Name</th><th>Client Name</th><th>Est. Value</th><th>Status</th><th>Completion Action</th></tr>
+          </thead>
+          <tbody id="done-projects-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW: PRICING -->
+    <div id="view-pricing" class="view-pane">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Direct Cost (Mat + Lab)</div>
+          <div class="metric-value" id="price-direct-cost">$0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Margin & Overheads</div>
+          <div class="metric-value" id="price-margin-val">$0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Total Tender Price (Ex. GST)</div>
+          <div class="metric-value" style="color:var(--accent-blue);" id="price-total-tender">$0.00</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Takeoff Pricing & Labor Rates</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Unit Mat Cost ($)</th>
+              <th>Total Mat ($)</th>
+              <th>Labor Hours/Unit</th>
+              <th>Total Labor ($)</th>
             </tr>
           </thead>
-          <tbody id="takeoffs-body"></tbody>
+          <tbody id="pricing-table-body"></tbody>
         </table>
       </div>
-    </section>
 
-    <!-- VIEW 6: PRICING -->
-    <section id="view-pricing" class="hidden space-y-4">
-      <h1 class="font-serif-custom text-3xl">Pricing Schedules & Margin Rules</h1>
-      <div class="bg-white p-6 border border-[#E6E1DA] rounded-xl text-xs space-y-2">
-        <p><strong>Target Commercial Margin:</strong> 9.0%</p>
-        <p><strong>Minimum Margin Floor Alert Threshold:</strong> 7.0%</p>
+      <div class="card">
+        <div class="card-title">Subcontractors, Preliminaries & Profit Margin</div>
+        <div class="takeoff-form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+          <div class="form-group">
+            <label>Base Labor Rate ($/hr)</label>
+            <input type="number" id="rate-labor" value="85" onchange="calculateTenderTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Subcontractor Quotes ($)</label>
+            <input type="number" id="cost-subbies" placeholder="0" onchange="calculateTenderTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Preliminaries & Plant Hire ($)</label>
+            <input type="number" id="cost-prelims" placeholder="0" onchange="calculateTenderTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Overhead (%)</label>
+            <input type="number" id="margin-overhead" value="10" onchange="calculateTenderTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Profit Margin (%)</label>
+            <input type="number" id="margin-profit" value="15" onchange="calculateTenderTotal()" />
+          </div>
+        </div>
       </div>
-    </section>
-
+    </div>
   </main>
 </div>
 
-<!-- APPLICATION JAVASCRIPT -->
-<script>
-  // Google Apps Script Web App URL
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzl61bAq7IsFCL8vqT4M5sUNoY95SLhsZcJJFEYy6YdsCKOmnXTS62CIptb4S4bihaCpQ/exec';
-
-  let projectsData = [];
-
-  // Initialize Application Data
-  async function loadInitialData() {
-    try {
-      // First attempt to pull data from your Google Apps Script endpoint
-      const resGScript = await fetch(APPS_SCRIPT_URL);
-      const scriptData = await resGScript.json();
-      if (Array.isArray(scriptData) && scriptData.length > 0) {
-        projectsData = scriptData;
-      } else {
-        throw new Error('Using Express API or fallback');
-      }
-    } catch (e) {
-      try {
-        const resProj = await fetch('/api/projects');
-        projectsData = await resProj.json();
-      } catch (e2) {
-        // Local Fallback Data
-        projectsData = [
-          { id: 1, name: "Harbour Bridge Retail Fitout", client: "Lendlease", val: 2.1, margin: 11.4, estimator: "J. Nguyen", items: 58, closeDate: "2026-09-16", stage: "Review", pct: 94, trade: "Finishes" },
-          { id: 2, name: "Riverside Apartments", client: "Multiplex", val: 12.4, margin: 8.2, estimator: "J. Nguyen", items: 214, closeDate: "2026-09-18", stage: "Pricing", pct: 82, trade: "Structure" },
-          { id: 3, name: "Commercial Warehouse — Unit 4", client: "BuildCorp", val: 4.8, margin: 6.1, estimator: "S. Patel", items: 96, closeDate: "2026-09-20", stage: "Takeoff", pct: 31, trade: "Earthworks" }
-        ];
-      }
-    }
-    renderDashboardTable();
-    renderActiveProjects();
-    loadChecklist();
-    loadTakeoffs();
-  }
-
-  // Tab Switcher Logic
-  function switchTab(tab) {
-    ['dashboard', 'checklist', 'active', 'completed', 'takeoffs', 'pricing'].forEach(v => {
-      document.getElementById(`view-${v}`).classList.add('hidden');
-      const navBtn = document.getElementById(`nav-${v}`);
-      if(navBtn) navBtn.className = "w-full text-left px-3 py-2 rounded-md text-xs font-medium hover:bg-white/5 hover:text-white transition";
-    });
-    document.getElementById(`view-${tab}`).classList.remove('hidden');
-    const activeBtn = document.getElementById(`nav-${tab}`);
-    if(activeBtn) activeBtn.className = "w-full text-left px-3 py-2 rounded-md text-xs font-medium text-white bg-[#1F332C]";
-  }
-
-  // Render Dashboard Table
-  function renderDashboardTable() {
-    const filterRisk = document.getElementById('risk-toggle').checked;
-    const body = document.getElementById('dashboard-table-body');
-    body.innerHTML = projectsData
-      .filter(p => filterRisk ? (p.pct < 80 && p.stage !== 'Submitted') : true)
-      .map(p => `
-        <tr class="border-b border-[#F0EDE8]">
-          <td class="py-3 font-semibold">${p.name}<div class="text-[10px] font-normal text-[#6E6A63]">${p.client} · ${p.estimator}</div></td>
-          <td class="py-3 font-bold">$${p.val}M</td>
-          <td class="py-3 ${p.margin < 7 ? 'text-[#B4401F] font-bold' : ''}">${p.margin}%</td>
-          <td class="py-3">${p.closeDate}</td>
-          <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${p.stage === 'Submitted' ? 'bg-[#EAF2EB] text-[#2F6F3E]' : 'bg-[#EFECE6]'}">${p.stage} (${p.pct}%)</span></td>
-        </tr>
-      `).join('');
-  }
-
-  // Render Active Projects
-  function renderActiveProjects() {
-    const body = document.getElementById('active-projects-body');
-    body.innerHTML = projectsData.map(p => `
-      <tr class="border-b border-[#F0EDE8]">
-        <td class="py-2 font-semibold">${p.name}</td>
-        <td class="py-2">${p.client}</td>
-        <td class="py-2">${p.estimator}</td>
-        <td class="py-2">${p.trade}</td>
-        <td class="py-2 font-bold">$${p.val}M</td>
-      </tr>
-    `).join('');
-  }
-
-  // Load Workflow Checklist
-  async function loadChecklist() {
-    let items = [];
-    try {
-      const res = await fetch('/api/checklists');
-      items = await res.json();
-    } catch (e) {
-      items = [
-        { id: 101, task: "Verify Subcontractor Quotes for Concrete Works", done: true, assignee: "J. Nguyen" },
-        { id: 102, task: "Confirm Site Access Constraints & Crane Hire Setup", done: false, assignee: "J. Nguyen" }
-      ];
-    }
-    const container = document.getElementById('checklist-container');
-    container.innerHTML = items.map(c => `
-      <div class="flex items-center justify-between p-2 border-b border-[#F0EDE8]">
-        <label class="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" ${c.done ? 'checked' : ''}>
-          <span class="${c.done ? 'line-through text-[#8C877E]' : 'font-medium'}">${c.task}</span>
-        </label>
-        <span class="text-[10px] bg-[#EFECE6] px-2 py-0.5 rounded">${c.assignee}</span>
+<!-- Modal: Add New Project -->
+<div class="modal-overlay" id="modal-new-project">
+  <div class="modal-box">
+    <div class="card-title">Add New Project</div>
+    <form id="new-project-form" onsubmit="handleCreateProject(event)">
+      <div class="form-group"><label>Project Name</label><input type="text" id="new-proj-name" placeholder="e.g. Commercial Hub Phase 2" required /></div>
+      <div class="form-group"><label>Client / Builder Name</label><input type="text" id="new-client-name" placeholder="e.g. Multiplex Constructions" required /></div>
+      <div class="form-group"><label>Estimated Value</label><input type="text" id="new-contract-val" placeholder="e.g. $150,000" /></div>
+      <div class="form-group"><label>Submission Due Date</label><input type="date" id="new-due-date" /></div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+        <button type="button" class="btn btn-secondary" onclick="closeNewProjectModal()">Cancel</button>
+        <button type="submit" class="btn btn-blue">Create Project</button>
       </div>
-    `).join('');
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast-msg">Saved to Cloud</div>
+
+<script>
+  const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbzl61bAq7IsFCL8vqT4M5sUNoY95SLhsZcJJFEYy6YdsCKOmnXTS62CIptb4S4bihaCpQ/exec";
+
+  let projects = [
+    {
+      projectName: "Riverside Apartments",
+      clientName: "Multiplex Constructions",
+      contractValue: "$250,000",
+      dueDate: "2026-10-15",
+      summary: "12-unit residential apartment development.",
+      status: "In Progress",
+      workflowTasks: { wf1: true, wf2: true, wf3: true, wf4: false },
+      takeoffItems: [
+        { id: 1, code: "A1", desc: "Type A LED Downlight 10W", cat: "Lighting", qty: 120, unit: "ea", unitCost: 25, laborHours: 0.5 },
+        { id: 2, code: "DGPO", desc: "Double GPO 10A White", cat: "Power", qty: 85, unit: "ea", unitCost: 12, laborHours: 0.4 }
+      ]
+    },
+    {
+      projectName: "Commercial Warehouse - Unit 4",
+      clientName: "BuildCorp Australia",
+      contractValue: "$110,000",
+      dueDate: "2026-11-02",
+      summary: "High bay lighting and 3-phase power distribution installation.",
+      status: "In Progress",
+      workflowTasks: { wf1: true, wf2: false },
+      takeoffItems: [
+        { id: 1, code: "HB-1", desc: "150W LED High Bay Light", cat: "Lighting", qty: 18, unit: "ea", unitCost: 110, laborHours: 1.2 }
+      ]
+    }
+  ];
+
+  let currentProjectIndex = 0;
+
+  function switchNav(el, viewId) {
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    el.classList.add('active');
+    switchTab(viewId);
   }
 
-  // Load Takeoff Items
-  async function loadTakeoffs() {
-    let items = [];
-    try {
-      const res = await fetch('/api/takeoffs');
-      items = await res.json();
-    } catch (e) {
-      items = [
-        { item: "Reinforced Concrete Core Slab", quantity: 1450, unit: "m3", rate: 420 },
-        { item: "Structural Steel Framing (Grade 350)", quantity: 310, unit: "tonnes", rate: 3800 }
-      ];
+  function switchTab(viewId) {
+    document.querySelectorAll('.view-pane').forEach(pane => pane.classList.remove('active'));
+    const target = document.getElementById(viewId);
+    if (target) target.classList.add('active');
+
+    // Dynamic Header Title Update
+    const titleEl = document.getElementById('header-title');
+    const subtitleEl = document.getElementById('header-subtitle');
+    const currentProj = projects[currentProjectIndex];
+
+    if (viewId === 'view-dashboard') {
+      titleEl.textContent = "Executive Dashboard";
+      subtitleEl.textContent = "Overview of all active and completed tender estimates";
+    } else if (viewId === 'view-projects') {
+      titleEl.textContent = "Active Projects Directory";
+      subtitleEl.textContent = "Manage and track all ongoing estimations";
+    } else if (viewId === 'view-done') {
+      titleEl.textContent = "Completed Projects";
+      subtitleEl.textContent = "Archive of finalized project quotes";
+    } else {
+      if (currentProj) {
+        titleEl.textContent = currentProj.projectName;
+        subtitleEl.textContent = `Client: ${currentProj.clientName} | Tender & Estimating Workflow`;
+      }
     }
-    const body = document.getElementById('takeoffs-body');
-    body.innerHTML = items.map(t => `
-      <tr class="border-b border-[#F0EDE8]">
-        <td class="py-2 font-semibold">${t.item}</td>
-        <td class="py-2">${t.quantity} ${t.unit}</td>
-        <td class="py-2">$${t.rate}</td>
-        <td class="py-2 font-bold">$${(t.quantity * t.rate).toLocaleString()}</td>
+
+    if (viewId === 'view-pricing') {
+      renderPricingTable();
+    }
+  }
+
+  function markProjectDone(index) {
+    projects[index].status = "Completed";
+    renderDashboard();
+    renderProjectsTable();
+    renderDoneProjectsTable();
+    showToast(`"${projects[index].projectName}" moved to Completed tab!`);
+  }
+
+  function markProjectActive(index) {
+    projects[index].status = "In Progress";
+    renderDashboard();
+    renderProjectsTable();
+    renderDoneProjectsTable();
+    showToast(`"${projects[index].projectName}" reopened in Active list.`);
+  }
+
+  function toggleTask(checkbox) {
+    const currentProj = projects[currentProjectIndex];
+    if (!currentProj) return;
+
+    if (!currentProj.workflowTasks) {
+      currentProj.workflowTasks = {};
+    }
+
+    currentProj.workflowTasks[checkbox.id] = checkbox.checked;
+    
+    updateWorkflowUI();
+    renderDashboard();
+    renderProjectsTable();
+    saveToCloud();
+  }
+
+  function updateWorkflowUI() {
+    const currentProj = projects[currentProjectIndex];
+    const tasks = (currentProj && currentProj.workflowTasks) ? currentProj.workflowTasks : {};
+    
+    const checkboxes = document.querySelectorAll('#view-checklist input[type="checkbox"]');
+    let checkedCount = 0;
+
+    checkboxes.forEach(box => {
+      const isChecked = !!tasks[box.id];
+      box.checked = isChecked;
+
+      const item = box.closest('.task-item');
+      if (isChecked) {
+        checkedCount++;
+        item.classList.add('completed');
+      } else {
+        item.classList.remove('completed');
+      }
+    });
+
+    const total = checkboxes.length;
+    const percent = Math.round((checkedCount / total) * 100);
+
+    document.getElementById('progress-bar-fill').style.width = percent + '%';
+    document.getElementById('progress-text').textContent = `${checkedCount} of ${total} Completed (${percent}%)`;
+    document.getElementById('stepper-pct').textContent = percent + '%';
+  }
+
+  function renderDashboard() {
+    const activeCount = projects.filter(p => p.status !== "Completed").length;
+    const doneCount = projects.filter(p => p.status === "Completed").length;
+
+    document.getElementById('metric-active-count').textContent = activeCount;
+    document.getElementById('metric-done-count').textContent = doneCount;
+    document.getElementById('metric-current-name').textContent = projects[currentProjectIndex] ? projects[currentProjectIndex].projectName : "None";
+
+    const tbody = document.getElementById('dashboard-table-body');
+    tbody.innerHTML = projects.map((p, index) => {
+      const pct = getProjectProgressPct(p);
+      const isDone = p.status === "Completed";
+      return `
+        <tr>
+          <td><strong>${p.projectName}</strong></td>
+          <td>${p.clientName}</td>
+          <td>${pct}%</td>
+          <td><span class="status-badge ${isDone ? 'status-completed' : 'status-active'}">${p.status || 'In Progress'}</span></td>
+          <td>${p.dueDate}</td>
+          <td>
+            ${isDone 
+              ? `<button class="btn btn-secondary" style="padding:0.3rem 0.6rem; font-size:0.75rem;" onclick="markProjectActive(${index})">Reopen</button>` 
+              : `<button class="btn btn-success" style="padding:0.3rem 0.6rem; font-size:0.75rem;" onclick="markProjectDone(${index})"><i class="fa-solid fa-check"></i> Mark Done</button>`
+            }
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderDoneProjectsTable() {
+    const tbody = document.getElementById('done-projects-table-body');
+    const doneProjects = projects.map((p, i) => ({ ...p, originalIndex: i })).filter(p => p.status === "Completed");
+
+    if (doneProjects.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No completed projects yet.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = doneProjects.map(p => `
+      <tr>
+        <td><strong>${p.projectName}</strong></td>
+        <td>${p.clientName}</td>
+        <td>${p.contractValue}</td>
+        <td><span class="status-badge status-completed">Completed</span></td>
+        <td>
+          <button class="btn btn-secondary" style="padding:0.3rem 0.6rem; font-size:0.75rem;" onclick="markProjectActive(${p.originalIndex})">Re-open Project</button>
+        </td>
       </tr>
     `).join('');
   }
 
-  // Run initial fetch on page load
-  window.onload = loadInitialData;
+  /* Takeoff Fixture Management */
+  function handleAddTakeoffItem(e) {
+    e.preventDefault();
+    const code = document.getElementById('tf-code').value.toUpperCase();
+    const desc = document.getElementById('tf-desc').value;
+    const cat = document.getElementById('tf-cat').value;
+    const qty = parseInt(document.getElementById('tf-qty').value);
+    const unit = document.getElementById('tf-unit').value;
+
+    const currentProj = projects[currentProjectIndex];
+    if (!currentProj.takeoffItems) currentProj.takeoffItems = [];
+
+    currentProj.takeoffItems.push({ id: Date.now(), code, desc, cat, qty, unit, unitCost: 0, laborHours: 0 });
+
+    document.getElementById('add-takeoff-form').reset();
+    renderTakeoffTable();
+    showToast(`Added [${code}] to Takeoff List`);
+  }
+
+  function deleteTakeoffItem(id) {
+    const currentProj = projects[currentProjectIndex];
+    if (!currentProj || !currentProj.takeoffItems) return;
+
+    currentProj.takeoffItems = currentProj.takeoffItems.filter(item => item.id !== id);
+    renderTakeoffTable();
+  }
+
+  function renderTakeoffTable() {
+    const currentProj = projects[currentProjectIndex];
+    const items = (currentProj && currentProj.takeoffItems) ? currentProj.takeoffItems : [];
+    const tbody = document.getElementById('takeoff-table-body');
+
+    document.getElementById('takeoff-summary-count').textContent = `${items.length} items recorded`;
+
+    if (items.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No takeoff items added yet for this project.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = items.map(item => `
+      <tr>
+        <td><span class="code-badge">${item.code || '-'}</span></td>
+        <td><strong>${item.desc}</strong></td>
+        <td><span class="task-tag">${item.cat}</span></td>
+        <td><strong>${item.qty}</strong></td>
+        <td>${item.unit}</td>
+        <td>
+          <button class="btn btn-secondary" style="padding:0.25rem 0.5rem; color:#ef4444;" onclick="deleteTakeoffItem(${item.id})">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  /* Pricing Engine */
+  function renderPricingTable() {
+    const currentProj = projects[currentProjectIndex];
+    const items = (currentProj && currentProj.takeoffItems) ? currentProj.takeoffItems : [];
+    const tbody = document.getElementById('pricing-table-body');
+
+    if (items.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">Add items to the Takeoffs tab to generate pricing calculations.</td></tr>`;
+      calculateTenderTotal();
+      return;
+    }
+
+    tbody.innerHTML = items.map((item, i) => `
+      <tr>
+        <td><strong>[${item.code}]</strong> ${item.desc}</td>
+        <td>${item.qty} ${item.unit}</td>
+        <td><input type="number" value="${item.unitCost || 0}" style="width:90px;" onchange="updateItemPricing(${i}, 'unitCost', this.value)"/></td>
+        <td id="total-mat-${i}">$${((item.unitCost || 0) * item.qty).toFixed(2)}</td>
+        <td><input type="number" step="0.1" value="${item.laborHours || 0}" style="width:80px;" onchange="updateItemPricing(${i}, 'laborHours', this.value)"/></td>
+        <td id="total-lab-${i}">$${((item.laborHours || 0) * item.qty * parseFloat(document.getElementById('rate-labor').value || 85)).toFixed(2)}</td>
+      </tr>
+    `).join('');
+
+    calculateTenderTotal();
+  }
+
+  function updateItemPricing(index, field, val) {
+    const currentProj = projects[currentProjectIndex];
+    if (currentProj && currentProj.takeoffItems[index]) {
+      currentProj.takeoffItems[index][field] = parseFloat(val) || 0;
+      renderPricingTable();
+    }
+  }
+
+  function calculateTenderTotal() {
+    const currentProj = projects[currentProjectIndex];
+    const items = (currentProj && currentProj.takeoffItems) ? currentProj.takeoffItems : [];
+    const laborRate = parseFloat(document.getElementById('rate-labor').value) || 0;
+    
+    let totalMaterialCost = 0;
+    let totalLaborCost = 0;
+
+    items.forEach(item => {
+      totalMaterialCost += (item.unitCost || 0) * item.qty;
+      totalLaborCost += (item.laborHours || 0) * item.qty * laborRate;
+    });
+
+    const subbies = parseFloat(document.getElementById('cost-subbies').value) || 0;
+    const prelims = parseFloat(document.getElementById('cost-prelims').value) || 0;
+
+    const directCost = totalMaterialCost + totalLaborCost + subbies + prelims;
+
+    const overheadPct = parseFloat(document.getElementById('margin-overhead').value) || 0;
+    const profitPct = parseFloat(document.getElementById('margin-profit').value) || 0;
+
+    const overheadVal = directCost * (overheadPct / 100);
+    const profitVal = (directCost + overheadVal) * (profitPct / 100);
+    const totalMargin = overheadVal + profitVal;
+    const totalTender = directCost + totalMargin;
+
+    document.getElementById('price-direct-cost').textContent = `$${directCost.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+    document.getElementById('price-margin-val').textContent = `$${totalMargin.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+    document.getElementById('price-total-tender').textContent = `$${totalTender.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+  }
+
+  function getProjectProgressPct(p) {
+    if (!p.workflowTasks) return 0;
+    const keys = Object.keys(p.workflowTasks);
+    const checked = keys.filter(k => p.workflowTasks[k] === true).length;
+    return Math.round((checked / 14) * 100);
+  }
+
+  function openNewProjectModal() {
+    document.getElementById('modal-new-project').classList.add('active');
+  }
+
+  function closeNewProjectModal() {
+    document.getElementById('modal-new-project').classList.remove('active');
+    document.getElementById('new-project-form').reset();
+  }
+
+  function handleCreateProject(e) {
+    e.preventDefault();
+    const name = document.getElementById('new-proj-name').value;
+    const client = document.getElementById('new-client-name').value;
+    const val = document.getElementById('new-contract-val').value || "$0";
+    const due = document.getElementById('new-due-date').value || "N/A";
+
+    const newProj = {
+      projectName: name,
+      clientName: client,
+      contractValue: val,
+      dueDate: due,
+      status: "In Progress",
+      workflowTasks: {},
+      takeoffItems: []
+    };
+
+    projects.push(newProj);
+    currentProjectIndex = projects.length - 1;
+
+    renderProjectDetails();
+    renderDashboard();
+    renderProjectsTable();
+    closeNewProjectModal();
+    switchTab('view-checklist');
+    showToast(`Created & Switched to "${name}"`);
+  }
+
+  function selectProject(index) {
+    currentProjectIndex = index;
+    renderProjectDetails();
+    switchTab('view-checklist');
+    showToast(`Loaded "${projects[index].projectName}" Workspace`);
+  }
+
+  function renderProjectDetails() {
+    const p = projects[currentProjectIndex];
+    if (!p) return;
+
+    const activePane = document.querySelector('.view-pane.active');
+    if (activePane && !['view-dashboard', 'view-projects', 'view-done'].includes(activePane.id)) {
+      document.getElementById('header-title').textContent = p.projectName;
+      document.getElementById('header-subtitle').textContent = `Client: ${p.clientName} | Tender & Estimating Workflow`;
+    }
+
+    updateWorkflowUI();
+    renderTakeoffTable();
+    renderDashboard();
+  }
+
+  function renderProjectsTable() {
+    const tbody = document.getElementById('projects-table-body');
+    const activeProjects = projects.map((p, i) => ({ ...p, originalIndex: i })).filter(p => p.status !== "Completed");
+
+    tbody.innerHTML = activeProjects.map(p => {
+      const pct = getProjectProgressPct(p);
+      return `
+        <tr>
+          <td><strong>${p.projectName}</strong></td>
+          <td>${p.clientName}</td>
+          <td>${p.contractValue}</td>
+          <td><span class="task-tag" style="background:#e0f2fe; color:#0369a1;">${pct}%</span></td>
+          <td>${p.dueDate}</td>
+          <td>
+            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="selectProject(${p.originalIndex})">Open</button>
+            <button class="btn btn-success" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="markProjectDone(${p.originalIndex})"><i class="fa-solid fa-check"></i> Done</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast-msg');
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 3000);
+  }
+
+  async function saveToCloud() {
+    showToast("Saving Project...");
+    const p = projects[currentProjectIndex];
+    if (!p) return;
+
+    if (!GOOGLE_API_URL || GOOGLE_API_URL.includes("YOUR_GOOGLE")) {
+      setTimeout(() => showToast("Saved to Local Workspace"), 500);
+      return;
+    }
+
+    try {
+      await fetch(GOOGLE_API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(p)
+      });
+      showToast("Synced to Google Sheets!");
+    } catch (e) {
+      showToast("Error syncing project data");
+    }
+  }
+
+  // Initial Load
+  renderProjectDetails();
+  renderDashboard();
+  renderProjectsTable();
+  renderDoneProjectsTable();
 </script>
+
 </body>
 </html>
