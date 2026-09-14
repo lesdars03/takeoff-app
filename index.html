@@ -156,8 +156,8 @@
   <main>
     <div class="header-bar">
       <div class="project-title-area">
-        <h1 id="active-project-name">Riverside Apartments</h1>
-        <p id="active-project-client">Client: Multiplex Constructions | Tender & Estimating Workflow</p>
+        <h1 id="header-title">Executive Dashboard</h1>
+        <p id="header-subtitle">Overview of all active and completed tender estimates</p>
       </div>
       <div class="header-actions">
         <button class="btn btn-blue" onclick="openNewProjectModal()"><i class="fa-solid fa-plus"></i> New Project</button>
@@ -355,68 +355,66 @@
     </div>
 
     <!-- VIEW: PRICING -->
-<div id="view-pricing" class="view-pane">
-  <div class="metrics-grid">
-    <div class="metric-card">
-      <div class="metric-title">Direct Cost (Mat + Lab)</div>
-      <div class="metric-value" id="price-direct-cost">$0.00</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-title">Margin & Overheads</div>
-      <div class="metric-value" id="price-margin-val">$0.00</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-title">Total Tender Price (Ex. GST)</div>
-      <div class="metric-value" style="color:var(--accent-blue);" id="price-total-tender">$0.00</div>
-    </div>
-  </div>
+    <div id="view-pricing" class="view-pane">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Direct Cost (Mat + Lab)</div>
+          <div class="metric-value" id="price-direct-cost">$0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Margin & Overheads</div>
+          <div class="metric-value" id="price-margin-val">$0.00</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Total Tender Price (Ex. GST)</div>
+          <div class="metric-value" style="color:var(--accent-blue);" id="price-total-tender">$0.00</div>
+        </div>
+      </div>
 
-  <!-- Direct Material & Labor Calculations -->
-  <div class="card">
-    <div class="card-title">Takeoff Pricing & Labor Rates</div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Qty</th>
-          <th>Unit Mat Cost ($)</th>
-          <th>Total Mat ($)</th>
-          <th>Labor Hours/Unit</th>
-          <th>Total Labor ($)</th>
-        </tr>
-      </thead>
-      <tbody id="pricing-table-body">
-        <!-- JS populates this from current project's takeoff items -->
-      </tbody>
-    </table>
-  </div>
+      <div class="card">
+        <div class="card-title">Takeoff Pricing & Labor Rates</div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Unit Mat Cost ($)</th>
+              <th>Total Mat ($)</th>
+              <th>Labor Hours/Unit</th>
+              <th>Total Labor ($)</th>
+            </tr>
+          </thead>
+          <tbody id="pricing-table-body"></tbody>
+        </table>
+      </div>
 
-  <!-- Indirect Costs, Subbies & Margins -->
-  <div class="card">
-    <div class="card-title">Subcontractors, Preliminaries & Profit Margin</div>
-    <div class="takeoff-form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-      <div class="form-group">
-        <label>Base Labor Rate ($/hr)</label>
-        <input type="number" id="rate-labor" value="85" onchange="calculateTenderTotal()" />
-      </div>
-      <div class="form-group">
-        <label>Subcontractor Quotes (MSB/Fire/Security)</label>
-        <input type="number" id="cost-subbies" placeholder="0" onchange="calculateTenderTotal()" />
-      </div>
-      <div class="form-group">
-        <label>Preliminaries & Plant Hire ($)</label>
-        <input type="number" id="cost-prelims" placeholder="0" onchange="calculateTenderTotal()" />
-      </div>
-      <div class="form-group">
-        <label>Overhead (%)</label>
-        <input type="number" id="margin-overhead" value="10" onchange="calculateTenderTotal()" />
-      </div>
-      <div class="form-group">
-        <label>Profit Margin (%)</label>
-        <input type="number" id="margin-profit" value="15" onchange="calculateTenderTotal()" />
+      <div class="card">
+        <div class="card-title">Subcontractors, Preliminaries & Profit Margin</div>
+        <div class="takeoff-form-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+          <div class="form-group">
+            <label>Base Labor Rate ($/hr)</label>
+            <input type="number" id="rate-labor" value="85" onchange="calculateTenderTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Subcontractor Quotes ($)</label>
+            <input type="number" id="cost-subbies" placeholder="0" onchange="calculateTenderTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Preliminaries & Plant Hire ($)</label>
+            <input type="number" id="cost-prelims" placeholder="0" onchange="calculateTenderTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Overhead (%)</label>
+            <input type="number" id="margin-overhead" value="10" onchange="calculateTenderTotal()" />
+          </div>
+          <div class="form-group">
+            <label>Profit Margin (%)</label>
+            <input type="number" id="margin-profit" value="15" onchange="calculateTenderTotal()" />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 </div>
 
 <!-- Modal: Add New Project -->
@@ -451,8 +449,8 @@
       status: "In Progress",
       workflowTasks: { wf1: true, wf2: true, wf3: true, wf4: false },
       takeoffItems: [
-        { id: 1, code: "A1", desc: "Type A LED Downlight 10W", cat: "Lighting", qty: 120, unit: "ea" },
-        { id: 2, code: "DGPO", desc: "Double GPO 10A White", cat: "Power", qty: 85, unit: "ea" }
+        { id: 1, code: "A1", desc: "Type A LED Downlight 10W", cat: "Lighting", qty: 120, unit: "ea", unitCost: 25, laborHours: 0.5 },
+        { id: 2, code: "DGPO", desc: "Double GPO 10A White", cat: "Power", qty: 85, unit: "ea", unitCost: 12, laborHours: 0.4 }
       ]
     },
     {
@@ -464,7 +462,7 @@
       status: "In Progress",
       workflowTasks: { wf1: true, wf2: false },
       takeoffItems: [
-        { id: 1, code: "HB-1", desc: "150W LED High Bay Light", cat: "Lighting", qty: 18, unit: "ea" }
+        { id: 1, code: "HB-1", desc: "150W LED High Bay Light", cat: "Lighting", qty: 18, unit: "ea", unitCost: 110, laborHours: 1.2 }
       ]
     }
   ];
@@ -481,6 +479,31 @@
     document.querySelectorAll('.view-pane').forEach(pane => pane.classList.remove('active'));
     const target = document.getElementById(viewId);
     if (target) target.classList.add('active');
+
+    // Dynamic Header Title Update
+    const titleEl = document.getElementById('header-title');
+    const subtitleEl = document.getElementById('header-subtitle');
+    const currentProj = projects[currentProjectIndex];
+
+    if (viewId === 'view-dashboard') {
+      titleEl.textContent = "Executive Dashboard";
+      subtitleEl.textContent = "Overview of all active and completed tender estimates";
+    } else if (viewId === 'view-projects') {
+      titleEl.textContent = "Active Projects Directory";
+      subtitleEl.textContent = "Manage and track all ongoing estimations";
+    } else if (viewId === 'view-done') {
+      titleEl.textContent = "Completed Projects";
+      subtitleEl.textContent = "Archive of finalized project quotes";
+    } else {
+      if (currentProj) {
+        titleEl.textContent = currentProj.projectName;
+        subtitleEl.textContent = `Client: ${currentProj.clientName} | Tender & Estimating Workflow`;
+      }
+    }
+
+    if (viewId === 'view-pricing') {
+      renderPricingTable();
+    }
   }
 
   function markProjectDone(index) {
@@ -607,7 +630,7 @@
     const currentProj = projects[currentProjectIndex];
     if (!currentProj.takeoffItems) currentProj.takeoffItems = [];
 
-    currentProj.takeoffItems.push({ id: Date.now(), code, desc, cat, qty, unit });
+    currentProj.takeoffItems.push({ id: Date.now(), code, desc, cat, qty, unit, unitCost: 0, laborHours: 0 });
 
     document.getElementById('add-takeoff-form').reset();
     renderTakeoffTable();
@@ -648,6 +671,71 @@
         </td>
       </tr>
     `).join('');
+  }
+
+  /* Pricing Engine */
+  function renderPricingTable() {
+    const currentProj = projects[currentProjectIndex];
+    const items = (currentProj && currentProj.takeoffItems) ? currentProj.takeoffItems : [];
+    const tbody = document.getElementById('pricing-table-body');
+
+    if (items.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">Add items to the Takeoffs tab to generate pricing calculations.</td></tr>`;
+      calculateTenderTotal();
+      return;
+    }
+
+    tbody.innerHTML = items.map((item, i) => `
+      <tr>
+        <td><strong>[${item.code}]</strong> ${item.desc}</td>
+        <td>${item.qty} ${item.unit}</td>
+        <td><input type="number" value="${item.unitCost || 0}" style="width:90px;" onchange="updateItemPricing(${i}, 'unitCost', this.value)"/></td>
+        <td id="total-mat-${i}">$${((item.unitCost || 0) * item.qty).toFixed(2)}</td>
+        <td><input type="number" step="0.1" value="${item.laborHours || 0}" style="width:80px;" onchange="updateItemPricing(${i}, 'laborHours', this.value)"/></td>
+        <td id="total-lab-${i}">$${((item.laborHours || 0) * item.qty * parseFloat(document.getElementById('rate-labor').value || 85)).toFixed(2)}</td>
+      </tr>
+    `).join('');
+
+    calculateTenderTotal();
+  }
+
+  function updateItemPricing(index, field, val) {
+    const currentProj = projects[currentProjectIndex];
+    if (currentProj && currentProj.takeoffItems[index]) {
+      currentProj.takeoffItems[index][field] = parseFloat(val) || 0;
+      renderPricingTable();
+    }
+  }
+
+  function calculateTenderTotal() {
+    const currentProj = projects[currentProjectIndex];
+    const items = (currentProj && currentProj.takeoffItems) ? currentProj.takeoffItems : [];
+    const laborRate = parseFloat(document.getElementById('rate-labor').value) || 0;
+    
+    let totalMaterialCost = 0;
+    let totalLaborCost = 0;
+
+    items.forEach(item => {
+      totalMaterialCost += (item.unitCost || 0) * item.qty;
+      totalLaborCost += (item.laborHours || 0) * item.qty * laborRate;
+    });
+
+    const subbies = parseFloat(document.getElementById('cost-subbies').value) || 0;
+    const prelims = parseFloat(document.getElementById('cost-prelims').value) || 0;
+
+    const directCost = totalMaterialCost + totalLaborCost + subbies + prelims;
+
+    const overheadPct = parseFloat(document.getElementById('margin-overhead').value) || 0;
+    const profitPct = parseFloat(document.getElementById('margin-profit').value) || 0;
+
+    const overheadVal = directCost * (overheadPct / 100);
+    const profitVal = (directCost + overheadVal) * (profitPct / 100);
+    const totalMargin = overheadVal + profitVal;
+    const totalTender = directCost + totalMargin;
+
+    document.getElementById('price-direct-cost').textContent = `$${directCost.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+    document.getElementById('price-margin-val').textContent = `$${totalMargin.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+    document.getElementById('price-total-tender').textContent = `$${totalTender.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
   }
 
   function getProjectProgressPct(p) {
@@ -705,8 +793,11 @@
     const p = projects[currentProjectIndex];
     if (!p) return;
 
-    document.getElementById('active-project-name').textContent = p.projectName;
-    document.getElementById('active-project-client').textContent = `Client: ${p.clientName} | Tender & Estimating Workflow`;
+    const activePane = document.querySelector('.view-pane.active');
+    if (activePane && !['view-dashboard', 'view-projects', 'view-done'].includes(activePane.id)) {
+      document.getElementById('header-title').textContent = p.projectName;
+      document.getElementById('header-subtitle').textContent = `Client: ${p.clientName} | Tender & Estimating Workflow`;
+    }
 
     updateWorkflowUI();
     renderTakeoffTable();
