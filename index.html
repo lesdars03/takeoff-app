@@ -55,6 +55,7 @@
     .btn:hover { opacity: 0.9; }
     .btn-secondary { background: #fff; color: var(--text-main); border: 1px solid var(--border-color); }
     .btn-blue { background: var(--accent-blue); color: #fff; }
+    .btn-success { background: #16a34a; color: #fff; }
 
     /* Workflow Stepper */
     .stepper-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
@@ -74,6 +75,12 @@
     .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
     .card-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
 
+    /* Metric Cards Grid */
+    .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .metric-card { background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; }
+    .metric-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .metric-value { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-top: 0.25rem; }
+
     /* Checklist Section */
     .workflow-group { margin-bottom: 1.5rem; }
     .workflow-group-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.75rem; letter-spacing: 0.05em; display: flex; justify-content: space-between; }
@@ -84,6 +91,11 @@
     .task-item.completed { background: #f0fdf4; border-color: #bbf7d0; opacity: 0.8; }
     .task-item.completed .task-text { text-decoration: line-through; color: var(--text-muted); }
     .task-tag { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; background: #e2e8f0; color: #475569; }
+
+    /* Badges */
+    .status-badge { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 20px; text-transform: capitalize; }
+    .status-active { background: var(--status-amber-bg); color: var(--status-amber-text); }
+    .status-completed { background: var(--status-green-bg); color: var(--status-green-text); }
 
     /* Progress bar */
     .progress-bar-container { background: #e5e7eb; border-radius: 8px; height: 10px; width: 100%; overflow: hidden; margin-top: 0.5rem; }
@@ -125,12 +137,12 @@
         <span>Australian Estimator Copilot</span>
       </div>
       <ul class="nav-list">
-        <li class="nav-item active" onclick="switchNav(this, 'view-checklist')"><i class="fa-solid fa-list-check"></i> Workflow Checklist</li>
-        <li class="nav-item" onclick="switchNav(this, 'view-projects')"><i class="fa-solid fa-folder"></i> Projects Directory</li>
+        <li class="nav-item active" onclick="switchNav(this, 'view-dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-checklist')"><i class="fa-solid fa-list-check"></i> Workflow Checklist</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-projects')"><i class="fa-solid fa-folder"></i> Active Projects</li>
+        <li class="nav-item" onclick="switchNav(this, 'view-done')"><i class="fa-solid fa-circle-check"></i> Completed Projects</li>
         <li class="nav-item" onclick="switchNav(this, 'view-takeoff')"><i class="fa-solid fa-ruler-combined"></i> Takeoffs & Fixtures</li>
-        <li class="nav-item" onclick="switchNav(this, 'view-dashboard')"><i class="fa-solid fa-table-cells-large"></i> Scope Overview</li>
         <li class="nav-item" onclick="switchNav(this, 'view-pricing')"><i class="fa-solid fa-tags"></i> Pricing</li>
-        <li class="nav-item" onclick="switchNav(this, 'view-qa')"><i class="fa-solid fa-circle-check"></i> QA Review</li>
       </ul>
     </div>
 
@@ -161,15 +173,50 @@
       <div class="step-line"></div>
       <div class="step-item" onclick="switchTab('view-takeoff')"><div class="step-circle"><i class="fa-solid fa-ruler"></i></div>Takeoff Items</div>
       <div class="step-line"></div>
-      <div class="step-item" onclick="switchTab('view-dashboard')"><div class="step-circle"><i class="fa-solid fa-eye"></i></div>Scope</div>
+      <div class="step-item" onclick="switchTab('view-dashboard')"><div class="step-circle"><i class="fa-solid fa-chart-line"></i></div>Dashboard</div>
       <div class="step-line"></div>
       <div class="step-item" onclick="switchTab('view-pricing')"><div class="step-circle"><i class="fa-solid fa-dollar-sign"></i></div>Pricing</div>
-      <div class="step-line"></div>
-      <div class="step-item" onclick="switchTab('view-qa')"><div class="step-circle"><i class="fa-solid fa-check"></i></div>QA / BOQ</div>
+    </div>
+
+    <!-- VIEW: DASHBOARD -->
+    <div id="view-dashboard" class="view-pane active">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Active Projects</div>
+          <div class="metric-value" id="metric-active-count">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Completed Projects</div>
+          <div class="metric-value" id="metric-done-count">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Current Selected Project</div>
+          <div class="metric-value" id="metric-current-name" style="font-size: 1.1rem;">-</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Project Status Dashboard</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Project Name</th>
+              <th>Client Name</th>
+              <th>Progress</th>
+              <th>Status</th>
+              <th>Due Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-table-body"></tbody>
+        </table>
+      </div>
     </div>
 
     <!-- VIEW: WORKFLOW CHECKLIST -->
-    <div id="view-checklist" class="view-pane active">
+    <div id="view-checklist" class="view-pane">
       <div class="card">
         <div class="card-title">
           <span>Project Workflow Checklist</span>
@@ -186,22 +233,10 @@
         <div class="workflow-group">
           <div class="workflow-group-title">Stage 1: Tender Intake & Setup</div>
           <div class="checklist-container">
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf1" onchange="toggleTask(this)"><span class="task-text">Receive tender package (Outlook / Estimate One)</span></label>
-              <span class="task-tag">Tender Intake</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf2" onchange="toggleTask(this)"><span class="task-text">Check Tender Documents (Elec, Specs, Lighting, FFE, Arch drawings)</span></label>
-              <span class="task-tag">Doc Audit</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf3" onchange="toggleTask(this)"><span class="task-text">Folder Setup (01 Tender, 02 Subbie Quotes, 03 Docs, 04 Corro, 05 Working)</span></label>
-              <span class="task-tag">Folder Setup</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf4" onchange="toggleTask(this)"><span class="task-text">Save all tender files in 03 Documentations folder</span></label>
-              <span class="task-tag">Filing</span>
-            </div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf1" onchange="toggleTask(this)"><span class="task-text">Receive tender package (Outlook / Estimate One)</span></label><span class="task-tag">Tender Intake</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf2" onchange="toggleTask(this)"><span class="task-text">Check Tender Documents (Elec, Specs, Lighting, FFE, Arch drawings)</span></label><span class="task-tag">Doc Audit</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf3" onchange="toggleTask(this)"><span class="task-text">Folder Setup (01 Tender, 02 Subbie Quotes, 03 Docs, 04 Corro, 05 Working)</span></label><span class="task-tag">Folder Setup</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf4" onchange="toggleTask(this)"><span class="task-text">Save all tender files in 03 Documentations folder</span></label><span class="task-tag">Filing</span></div>
           </div>
         </div>
 
@@ -209,22 +244,10 @@
         <div class="workflow-group">
           <div class="workflow-group-title">Stage 2: Review & Systems Identification</div>
           <div class="checklist-container">
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf5" onchange="toggleTask(this)"><span class="task-text">Project Identification (New vs Existing / Residential / Commercial)</span></label>
-              <span class="task-tag">Scope Audit</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf6" onchange="toggleTask(this)"><span class="task-text">Drawing Review (Thorough layout review, notes, legends & specs)</span></label>
-              <span class="task-tag">Drawings</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf7" onchange="toggleTask(this)"><span class="task-text">System Identification (Lighting, DALI, MSB, DB, Comms, Security, Fire)</span></label>
-              <span class="task-tag">Systems</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf8" onchange="toggleTask(this)"><span class="task-text">RFQ Preparation (Switchboards, DALI, Emergency, Security, Fire)</span></label>
-              <span class="task-tag">Quotes & RFQs</span>
-            </div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf5" onchange="toggleTask(this)"><span class="task-text">Project Identification (New vs Existing / Residential / Commercial)</span></label><span class="task-tag">Scope Audit</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf6" onchange="toggleTask(this)"><span class="task-text">Drawing Review (Thorough layout review, notes, legends & specs)</span></label><span class="task-tag">Drawings</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf7" onchange="toggleTask(this)"><span class="task-text">System Identification (Lighting, DALI, MSB, DB, Comms, Security, Fire)</span></label><span class="task-tag">Systems</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf8" onchange="toggleTask(this)"><span class="task-text">RFQ Preparation (Switchboards, DALI, Emergency, Security, Fire)</span></label><span class="task-tag">Quotes & RFQs</span></div>
           </div>
         </div>
 
@@ -232,14 +255,8 @@
         <div class="workflow-group">
           <div class="workflow-group-title">Stage 3: Ground Plan & Take-Off Execution</div>
           <div class="checklist-container">
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf9" onchange="toggleTask(this)"><span class="task-text">Ground Plan Setup (Scale drawings & recheck Door 0.92m)</span></label>
-              <span class="task-tag">Plan Scaling</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf10" onchange="toggleTask(this)"><span class="task-text">Take-Off Sequence (Lighting -> Power -> Comms -> Trays -> Submains -> Systems)</span></label>
-              <span class="task-tag">Takeoff Exec</span>
-            </div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf9" onchange="toggleTask(this)"><span class="task-text">Ground Plan Setup (Scale drawings & recheck Door 0.92m)</span></label><span class="task-tag">Plan Scaling</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf10" onchange="toggleTask(this)"><span class="task-text">Take-Off Sequence (Lighting -> Power -> Comms -> Trays -> Submains -> Systems)</span></label><span class="task-tag">Takeoff Exec</span></div>
           </div>
         </div>
 
@@ -247,46 +264,25 @@
         <div class="workflow-group">
           <div class="workflow-group-title">Stage 4: Post Take-Off Validation & BOQ</div>
           <div class="checklist-container">
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf11" onchange="toggleTask(this)"><span class="task-text">Post Take-Off Checks (Cross-check Specs, Legends & FFE schedule)</span></label>
-              <span class="task-tag">QA Review</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf12" onchange="toggleTask(this)"><span class="task-text">Quantity Validation (Track lights & LED Strips verified and LOCKED)</span></label>
-              <span class="task-tag">Validation</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf13" onchange="toggleTask(this)"><span class="task-text">Data Export (Export formatted CSV -> Excel .xlsx)</span></label>
-              <span class="task-tag">Data Export</span>
-            </div>
-            <div class="task-item">
-              <label class="task-label"><input type="checkbox" id="wf14" onchange="toggleTask(this)"><span class="task-text">Final BOQ Preparation (Organise by system with Brands & BOM)</span></label>
-              <span class="task-tag">Final BOQ</span>
-            </div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf11" onchange="toggleTask(this)"><span class="task-text">Post Take-Off Checks (Cross-check Specs, Legends & FFE schedule)</span></label><span class="task-tag">QA Review</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf12" onchange="toggleTask(this)"><span class="task-text">Quantity Validation (Track lights & LED Strips verified and LOCKED)</span></label><span class="task-tag">Validation</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf13" onchange="toggleTask(this)"><span class="task-text">Data Export (Export formatted CSV -> Excel .xlsx)</span></label><span class="task-tag">Data Export</span></div>
+            <div class="task-item"><label class="task-label"><input type="checkbox" id="wf14" onchange="toggleTask(this)"><span class="task-text">Final BOQ Preparation (Organise by system with Brands & BOM)</span></label><span class="task-tag">Final BOQ</span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- VIEW: TAKEOFF & FIXTURES WITH CODE FIELD -->
+    <!-- VIEW: TAKEOFF & FIXTURES -->
     <div id="view-takeoff" class="view-pane">
       <div class="card">
         <div class="card-title">
           <span>Takeoff Fixtures & Materials List</span>
           <span style="font-size:0.85rem; color:var(--text-muted);" id="takeoff-summary-count">0 items recorded</span>
         </div>
-        <p class="card-desc">List fixtures, fittings, devices, and cable runs required for this project takeoff.</p>
-
-        <!-- Form to Add Items -->
         <form id="add-takeoff-form" onsubmit="handleAddTakeoffItem(event)" class="takeoff-form-grid">
-          <div class="form-group">
-            <label>Code / Tag</label>
-            <input type="text" id="tf-code" placeholder="e.g. A1, HB-1" style="font-family: monospace; font-weight:700;" required />
-          </div>
-          <div class="form-group">
-            <label>Fixture / Material Description</label>
-            <input type="text" id="tf-desc" placeholder="e.g. Type A1 LED Downlight (7W IP44)" required />
-          </div>
+          <div class="form-group"><label>Code / Tag</label><input type="text" id="tf-code" placeholder="e.g. A1, HB-1" style="font-family: monospace; font-weight:700;" required /></div>
+          <div class="form-group"><label>Fixture / Material Description</label><input type="text" id="tf-desc" placeholder="e.g. Type A1 LED Downlight (7W IP44)" required /></div>
           <div class="form-group">
             <label>Category</label>
             <select id="tf-cat">
@@ -298,10 +294,7 @@
               <option value="Fire/Security">Fire & Security</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Quantity</label>
-            <input type="number" id="tf-qty" min="1" placeholder="10" required />
-          </div>
+          <div class="form-group"><label>Quantity</label><input type="number" id="tf-qty" min="1" placeholder="10" required /></div>
           <div class="form-group">
             <label>Unit</label>
             <select id="tf-unit">
@@ -314,7 +307,6 @@
           <button type="submit" class="btn btn-blue"><i class="fa-solid fa-plus"></i> Add Item</button>
         </form>
 
-        <!-- Items Table -->
         <table class="data-table">
           <thead>
             <tr>
@@ -326,35 +318,38 @@
               <th style="width:80px;">Action</th>
             </tr>
           </thead>
-          <tbody id="takeoff-table-body">
-            <!-- Dynamic Takeoff Items -->
-          </tbody>
+          <tbody id="takeoff-table-body"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- VIEW: DASHBOARD / SCOPE OVERVIEW -->
-    <div id="view-dashboard" class="view-pane">
-      <div class="content-grid">
-        <div class="card">
-          <div class="card-title">AI Scope Summary</div>
-          <p class="card-desc" id="active-project-summary">12-unit residential apartment development.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW: PROJECTS -->
+    <!-- VIEW: ACTIVE PROJECTS -->
     <div id="view-projects" class="view-pane">
       <div class="card">
         <div class="card-title">
-          <span>Projects Directory</span>
+          <span>Active Projects Directory</span>
           <button class="btn btn-blue" onclick="openNewProjectModal()"><i class="fa-solid fa-plus"></i> New Project</button>
         </div>
         <table class="data-table">
           <thead>
-            <tr><th>Project Name</th><th>Client Name</th><th>Est. Value</th><th>Checklist Progress</th><th>Due Date</th><th>Action</th></tr>
+            <tr><th>Project Name</th><th>Client Name</th><th>Est. Value</th><th>Progress</th><th>Due Date</th><th>Action</th></tr>
           </thead>
           <tbody id="projects-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VIEW: COMPLETED PROJECTS -->
+    <div id="view-done" class="view-pane">
+      <div class="card">
+        <div class="card-title">
+          <span>Completed Projects</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Project Name</th><th>Client Name</th><th>Est. Value</th><th>Status</th><th>Completion Action</th></tr>
+          </thead>
+          <tbody id="done-projects-table-body"></tbody>
         </table>
       </div>
     </div>
@@ -366,14 +361,6 @@
         <p class="card-desc">Pricing rates and labor calculations.</p>
       </div>
     </div>
-
-    <!-- VIEW: QA REVIEW -->
-    <div id="view-qa" class="view-pane">
-      <div class="card">
-        <div class="card-title">Final BOQ & Compliance Summary</div>
-        <p class="card-desc">Review exported quantities before issuing final submission.</p>
-      </div>
-    </div>
   </main>
 </div>
 
@@ -382,22 +369,10 @@
   <div class="modal-box">
     <div class="card-title">Add New Project</div>
     <form id="new-project-form" onsubmit="handleCreateProject(event)">
-      <div class="form-group">
-        <label>Project Name</label>
-        <input type="text" id="new-proj-name" placeholder="e.g. Commercial Hub Phase 2" required />
-      </div>
-      <div class="form-group">
-        <label>Client / Builder Name</label>
-        <input type="text" id="new-client-name" placeholder="e.g. Multiplex Constructions" required />
-      </div>
-      <div class="form-group">
-        <label>Estimated Value</label>
-        <input type="text" id="new-contract-val" placeholder="e.g. $150,000" />
-      </div>
-      <div class="form-group">
-        <label>Submission Due Date</label>
-        <input type="date" id="new-due-date" />
-      </div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="new-proj-name" placeholder="e.g. Commercial Hub Phase 2" required /></div>
+      <div class="form-group"><label>Client / Builder Name</label><input type="text" id="new-client-name" placeholder="e.g. Multiplex Constructions" required /></div>
+      <div class="form-group"><label>Estimated Value</label><input type="text" id="new-contract-val" placeholder="e.g. $150,000" /></div>
+      <div class="form-group"><label>Submission Due Date</label><input type="date" id="new-due-date" /></div>
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
         <button type="button" class="btn btn-secondary" onclick="closeNewProjectModal()">Cancel</button>
         <button type="submit" class="btn btn-blue">Create Project</button>
@@ -418,6 +393,7 @@
       contractValue: "$250,000",
       dueDate: "2026-10-15",
       summary: "12-unit residential apartment development.",
+      status: "In Progress",
       workflowTasks: { wf1: true, wf2: true, wf3: true, wf4: false },
       takeoffItems: [
         { id: 1, code: "A1", desc: "Type A LED Downlight 10W", cat: "Lighting", qty: 120, unit: "ea" },
@@ -430,6 +406,7 @@
       contractValue: "$110,000",
       dueDate: "2026-11-02",
       summary: "High bay lighting and 3-phase power distribution installation.",
+      status: "In Progress",
       workflowTasks: { wf1: true, wf2: false },
       takeoffItems: [
         { id: 1, code: "HB-1", desc: "150W LED High Bay Light", cat: "Lighting", qty: 18, unit: "ea" }
@@ -451,6 +428,22 @@
     if (target) target.classList.add('active');
   }
 
+  function markProjectDone(index) {
+    projects[index].status = "Completed";
+    renderDashboard();
+    renderProjectsTable();
+    renderDoneProjectsTable();
+    showToast(`"${projects[index].projectName}" moved to Completed tab!`);
+  }
+
+  function markProjectActive(index) {
+    projects[index].status = "In Progress";
+    renderDashboard();
+    renderProjectsTable();
+    renderDoneProjectsTable();
+    showToast(`"${projects[index].projectName}" reopened in Active list.`);
+  }
+
   function toggleTask(checkbox) {
     const currentProj = projects[currentProjectIndex];
     if (!currentProj) return;
@@ -462,6 +455,7 @@
     currentProj.workflowTasks[checkbox.id] = checkbox.checked;
     
     updateWorkflowUI();
+    renderDashboard();
     renderProjectsTable();
     saveToCloud();
   }
@@ -494,6 +488,58 @@
     document.getElementById('stepper-pct').textContent = percent + '%';
   }
 
+  function renderDashboard() {
+    const activeCount = projects.filter(p => p.status !== "Completed").length;
+    const doneCount = projects.filter(p => p.status === "Completed").length;
+
+    document.getElementById('metric-active-count').textContent = activeCount;
+    document.getElementById('metric-done-count').textContent = doneCount;
+    document.getElementById('metric-current-name').textContent = projects[currentProjectIndex] ? projects[currentProjectIndex].projectName : "None";
+
+    const tbody = document.getElementById('dashboard-table-body');
+    tbody.innerHTML = projects.map((p, index) => {
+      const pct = getProjectProgressPct(p);
+      const isDone = p.status === "Completed";
+      return `
+        <tr>
+          <td><strong>${p.projectName}</strong></td>
+          <td>${p.clientName}</td>
+          <td>${pct}%</td>
+          <td><span class="status-badge ${isDone ? 'status-completed' : 'status-active'}">${p.status || 'In Progress'}</span></td>
+          <td>${p.dueDate}</td>
+          <td>
+            ${isDone 
+              ? `<button class="btn btn-secondary" style="padding:0.3rem 0.6rem; font-size:0.75rem;" onclick="markProjectActive(${index})">Reopen</button>` 
+              : `<button class="btn btn-success" style="padding:0.3rem 0.6rem; font-size:0.75rem;" onclick="markProjectDone(${index})"><i class="fa-solid fa-check"></i> Mark Done</button>`
+            }
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderDoneProjectsTable() {
+    const tbody = document.getElementById('done-projects-table-body');
+    const doneProjects = projects.map((p, i) => ({ ...p, originalIndex: i })).filter(p => p.status === "Completed");
+
+    if (doneProjects.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No completed projects yet.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = doneProjects.map(p => `
+      <tr>
+        <td><strong>${p.projectName}</strong></td>
+        <td>${p.clientName}</td>
+        <td>${p.contractValue}</td>
+        <td><span class="status-badge status-completed">Completed</span></td>
+        <td>
+          <button class="btn btn-secondary" style="padding:0.3rem 0.6rem; font-size:0.75rem;" onclick="markProjectActive(${p.originalIndex})">Re-open Project</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
   /* Takeoff Fixture Management */
   function handleAddTakeoffItem(e) {
     e.preventDefault();
@@ -506,14 +552,7 @@
     const currentProj = projects[currentProjectIndex];
     if (!currentProj.takeoffItems) currentProj.takeoffItems = [];
 
-    currentProj.takeoffItems.push({
-      id: Date.now(),
-      code,
-      desc,
-      cat,
-      qty,
-      unit
-    });
+    currentProj.takeoffItems.push({ id: Date.now(), code, desc, cat, qty, unit });
 
     document.getElementById('add-takeoff-form').reset();
     renderTakeoffTable();
@@ -584,7 +623,7 @@
       clientName: client,
       contractValue: val,
       dueDate: due,
-      summary: "New project created.",
+      status: "In Progress",
       workflowTasks: {},
       takeoffItems: []
     };
@@ -593,6 +632,7 @@
     currentProjectIndex = projects.length - 1;
 
     renderProjectDetails();
+    renderDashboard();
     renderProjectsTable();
     closeNewProjectModal();
     switchTab('view-checklist');
@@ -612,31 +652,28 @@
 
     document.getElementById('active-project-name').textContent = p.projectName;
     document.getElementById('active-project-client').textContent = `Client: ${p.clientName} | Tender & Estimating Workflow`;
-    document.getElementById('active-project-summary').textContent = p.summary || "No summary provided.";
 
     updateWorkflowUI();
     renderTakeoffTable();
+    renderDashboard();
   }
 
   function renderProjectsTable() {
     const tbody = document.getElementById('projects-table-body');
-    tbody.innerHTML = projects.map((p, index) => {
+    const activeProjects = projects.map((p, i) => ({ ...p, originalIndex: i })).filter(p => p.status !== "Completed");
+
+    tbody.innerHTML = activeProjects.map(p => {
       const pct = getProjectProgressPct(p);
       return `
         <tr>
           <td><strong>${p.projectName}</strong></td>
           <td>${p.clientName}</td>
           <td>${p.contractValue}</td>
-          <td>
-            <div style="display:flex; align-items:center; gap:0.5rem;">
-              <span class="task-tag" style="background:#e0f2fe; color:#0369a1;">${pct}%</span>
-            </div>
-          </td>
+          <td><span class="task-tag" style="background:#e0f2fe; color:#0369a1;">${pct}%</span></td>
           <td>${p.dueDate}</td>
           <td>
-            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="selectProject(${index})">
-              Open Project
-            </button>
+            <button class="btn btn-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="selectProject(${p.originalIndex})">Open</button>
+            <button class="btn btn-success" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="markProjectDone(${p.originalIndex})"><i class="fa-solid fa-check"></i> Done</button>
           </td>
         </tr>
       `;
@@ -675,7 +712,9 @@
 
   // Initial Load
   renderProjectDetails();
+  renderDashboard();
   renderProjectsTable();
+  renderDoneProjectsTable();
 </script>
 
 </body>
